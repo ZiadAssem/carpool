@@ -5,39 +5,32 @@ import '../classes/ride.dart';
 import 'trip_details.dart';
 
 CampusRide campusRide1 = CampusRide(
-  id: '1',
-  source: 'MAADI',
-  rider: 'Ahmed',
-  numberOfSeats: 4,
-    status:  'AVAILABLE'
-
-);
+    id: '1',
+    source: 'MAADI',
+    rider: 'Ahmed',
+    numberOfSeats: 4,
+    status: 'AVAILABLE');
 
 CampusRide campusRide2 = CampusRide(
-  id: '2',
-  source: 'NEWCAIRO',
-  rider: 'Ahmed',
-  numberOfSeats: 2,
-    status:  'AVAILABLE'
-
-);
+    id: '2',
+    source: 'NEWCAIRO',
+    rider: 'Ahmed',
+    numberOfSeats: 2,
+    status: 'AVAILABLE');
 
 CampusRide campusRide3 = CampusRide(
-  id: '3',
-  source: 'HELIOPLIS',
-  rider: 'Ahmed',
-  numberOfSeats: 3,
-    status:  'AVAILABLE'
-
-);
+    id: '3',
+    source: 'HELIOPLIS',
+    rider: 'Ahmed',
+    numberOfSeats: 3,
+    status: 'AVAILABLE');
 
 HomeRide homeRide1 = HomeRide(
-  id: '4',
-  destination: 'Maadi',
-  rider: 'Ahmed',
-  numberOfSeats: 1,
-  status:  'AVAILABLE'
-);
+    id: '4',
+    destination: 'Maadi',
+    rider: 'Ahmed',
+    numberOfSeats: 1,
+    status: 'AVAILABLE');
 
 List<CampusRide> CampusRides = [campusRide1, campusRide2, campusRide3];
 List<HomeRide> HomeRides = [homeRide1];
@@ -61,31 +54,26 @@ class _RoutesState extends State<Routes> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: reusableAppBar(
-        'Routes',
-        TabBar(
-          indicatorColor: Colors.white,
-          controller: _tabController,
-          tabs: const <Widget>[
-            Tab(
-              icon: Icon(Icons.directions_bus_rounded),
-              text: "Campus Rides",
-            ),
-            Tab(
-              icon: Icon(Icons.home_rounded),
-              text: "Home Rides",
-            ),
-          ],
-        ),
-      ),
+      appBar: reusableAppBar('Routes', _buildTabBar()),
       backgroundColor: Colors.transparent,
       body: TabBarView(
         controller: _tabController,
         children: [
-          _buildRideList(CampusRides, false),
-          _buildRideList(HomeRides, true),
+            _buildRideList(CampusRides, false),
+            _buildRideList(HomeRides, true),
         ],
       ),
+    );
+  }
+
+  Widget _buildTabBar() {
+    return TabBar(
+      indicatorColor: Colors.white,
+      controller: _tabController,
+      tabs: const <Widget>[
+        Tab(icon: Icon(Icons.directions_bus_rounded), text: "Campus Rides"),
+        Tab(icon: Icon(Icons.home_rounded), text: "Home Rides"),
+      ],
     );
   }
 
@@ -94,91 +82,113 @@ class _RoutesState extends State<Routes> with TickerProviderStateMixin {
       itemCount: rides.length,
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            elevation: 8,
-            color: const Color.fromARGB(
-                255, 255, 255, 255), // Card background color (white)
-            child: ListTile(
-              title: Text(
-                rides[index].source,
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(
-                        255, 142, 15, 6)), // Adjust text color
-              ),
-              subtitle: Text(
-                'Driver: ${rides[index].rider}',
-                style: const TextStyle(
-                    color: Color.fromARGB(
-                        255, 142, 15, 6)), // Adjust text color
-              ),
-              leading: const Icon(
-                Icons.bus_alert_rounded,
-                color:
-                    Color.fromARGB(255, 142, 15, 6), // Adjust icon color
-              ),
-              trailing: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Seats Left: ${rides[index].numberOfSeats}",
-                    style: const TextStyle(color: Colors.black), // Adjust text color
-                  ),
-                  const SizedBox(height: 4),
-                  isHomeRide? Text(
-                    "5:30",
-                    style: TextStyle(color: Colors.black), // Adjust text color
-                  ):Text(
-                    "7:30",
-                    style: TextStyle(color: Colors.black), // Adjust text color
-                  ),
-                  const SizedBox(height: 4),
-                  if (isHomeRide)
-                    isBefore10PM()
-                        ? Text(
-                            "${getTodayDate()}",
-                            style: const TextStyle(
-                                color: Colors.black), // Adjust text color
-                          )
-                        : Text(
-                            "${getTomorrowDate()}",
-                            style: const TextStyle(
-                                color: Colors.black), // Adjust text color
-                          )
-                  else
-                    isBefore10PM()
-                        ? Text(
-                            "${getTodayDate()}",
-                            style: const TextStyle(
-                                color: Colors.black), // Adjust text color
-                          )
-                        : Text(
-                            "${getTomorrowDate()}",
-                            style: const TextStyle(
-                                color: Colors.black), // Adjust text color
-                          ),
-                ],
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TripDetails(
-                      ride: rides[index],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        );
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: isHomeRide
+                ? _buildRide(rides, index,true)
+                : _buildRide(rides, index,false));
       },
     );
+  }
+
+  Widget _buildRide(rides, index, isHomeRide) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      elevation: 8,
+      color: const Color.fromARGB(
+          255, 255, 255, 255), // Card background color (white)
+      child: ListTile(
+        title: Text(
+          rides[index].source,
+          style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 142, 15, 6)), // Adjust text color
+        ),
+        subtitle: Text(
+          'Driver: ${rides[index].rider}',
+          style: const TextStyle(
+              color: Color.fromARGB(255, 142, 15, 6)), // Adjust text color
+        ),
+        leading: const Icon(
+          Icons.bus_alert_rounded,
+          color: Color.fromARGB(255, 142, 15, 6), // Adjust icon color
+        ),
+        trailing: isHomeRide
+            ? _buildHomeRide(rides, index)
+            : _buildCampusRide(rides, index),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TripDetails(
+                ride: rides[index],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildCampusRide(rides, index) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Seats Left: ${rides[index].numberOfSeats}",
+          style: const TextStyle(color: Colors.black), // Adjust text color
+        ),
+        const SizedBox(height: 4),
+        Text(
+          "7:30",
+          style: TextStyle(color: Colors.black), // Adjust text color
+        ),
+        const SizedBox(height: 4),
+        isBefore10PM()
+            ? Text(
+                "${getTomorrowDate()}",
+                style:
+                    const TextStyle(color: Colors.black), // Adjust text color
+              )
+            : Text(
+                "${getAfterTomorrowDate()}",
+                style:
+                    const TextStyle(color: Colors.black), // Adjust text color
+              ),
+      ],
+    );
+  }
+
+  Widget _buildHomeRide(rides, index) {
+    return  Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Seats Left: ${rides[index].numberOfSeats}",
+                style:
+                    const TextStyle(color: Colors.black), // Adjust text color
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "5:30",
+                style: TextStyle(color: Colors.black), // Adjust text color
+              ),
+              const SizedBox(height: 4),
+              isBefore1PM()
+                  ? Text(
+                      "${getTodayDate()}",
+                      style: const TextStyle(
+                          color: Colors.black), // Adjust text color
+                    )
+                  : Text(
+                      "${getTomorrowDate()}",
+                      style: const TextStyle(
+                          color: Colors.black), // Adjust text color
+                    )
+            ],
+          );
   }
 
   bool isBefore1PM() {
@@ -209,6 +219,14 @@ class _RoutesState extends State<Routes> with TickerProviderStateMixin {
     String formattedDate =
         "${tomorrow.year}-${_addLeadingZero(tomorrow.month)}-${_addLeadingZero(tomorrow.day)}";
 
+    return formattedDate;
+  }
+    String getAfterTomorrowDate() {
+    DateTime now = DateTime.now();
+    DateTime afterTomorrow = now.add(const Duration(days: 2));
+    String formattedDate =
+        "${afterTomorrow.year}-${_addLeadingZero(afterTomorrow.month)}-${_addLeadingZero(afterTomorrow.day)}";
+    
     return formattedDate;
   }
 
