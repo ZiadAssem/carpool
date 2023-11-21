@@ -14,62 +14,59 @@ class ProfilePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 142, 15, 6),
-                radius: 100,
-                child: Icon(Icons.person,size: 80,color: Colors.white,), // Set your image path
-              ),
+              _buildCircleAvatar(),
               const SizedBox(height: 16),
-              Card(
-                color: Colors.white.withOpacity(0.9),
-                elevation: 8,
-                child: const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'User Details',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      ListTile(
-                        title: Text('Name: John Doe'),
-                      ),
-                      ListTile(
-                        title: Text('Email: john.doe@eng.asu.edu.eg'),
-                      ),
-                      // Add more user details as needed
-                    ],
-                  ),
-                ),
-              ),
+              _buildDetailsCard(),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  // Handle sign-out logic
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 142, 15, 6),
-                ),
-                child: const Text('Sign Out'),
-              ),
+              _buildButton('Sign Out', () => null),
               const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () {
-                  // Handle delete account logic
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 142, 15, 6)),
-                child: const Text('Delete Account'),
-              ),
+              _buildButton('Delete Account', () => null),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildCircleAvatar() {
+    return const CircleAvatar(
+      backgroundColor: Color.fromARGB(255, 142, 15, 6),
+      radius: 100,
+      child: Icon(
+        Icons.person,
+        size: 80,
+        color: Colors.white,
+      ), // Set your image path
+    );
+  }
+
+  Widget _buildDetailsCard() {
+    return Card(
+      color: Colors.white.withOpacity(0.9),
+      elevation: 8,
+      child: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('User Details',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            SizedBox(height: 16),
+            ListTile(title: Text('Name: John Doe')),
+            ListTile(title: Text('Email: john.doe@eng.asu.edu.eg')),
+            // Add more user details as needed
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(String text, Function() fnOnTap) {
+    return ElevatedButton(
+      onPressed: fnOnTap,
+      style: ElevatedButton.styleFrom(
+          backgroundColor: const Color.fromARGB(255, 142, 15, 6)),
+      child: Text(text),
     );
   }
 }

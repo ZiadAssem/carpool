@@ -34,10 +34,11 @@ class CartPage extends StatelessWidget {
               ),
               _buildRideDetails(),
               const SizedBox(height: 16),
-              _buildButton('Proceed to Payment',(){}),
+              _buildButton('Proceed to Payment', () {}),
               const SizedBox(height: 16),
-              _buildButton('Trips History',(){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> TripsHistory()));
+              _buildButton('Trips History', () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TripsHistory()));
               }),
               //  _buildPreviousTripsList(),
             ],
@@ -55,10 +56,9 @@ class CartPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'From ${ride.source} to ${ride.destination}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+            Text('From ${ride.source} to ${ride.destination}',
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             _buildDetailRow('Rider:', ride.rider),
             _buildDetailRow(
@@ -87,7 +87,7 @@ class CartPage extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(text, fnOnTap()) {
+  Widget _buildButton(text, Function() fnOnTap) {
     return ElevatedButton(
       onPressed: () {
         fnOnTap();
