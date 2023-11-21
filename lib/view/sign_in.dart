@@ -37,103 +37,58 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
   }
 
   Widget SignUpForm() {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 200),
-          const Text(
-            "Sign Up",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            "Create an account to continue!",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-            ),
-          ),
-          const SizedBox(height: 20),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 200),
+        _buildSignUpInText('SIGN UP'),
+        const SizedBox(height: 20),
+        const Text("Create an account to continue!",
+            style: TextStyle(color: Colors.black, fontSize: 15)),
+        const SizedBox(height: 20),
 
-          //Signup form
-          Form(
-            key: signUpFormKey,
-            child: Column(
-              children: [
-                reusableTextField(
-                  "E-mail",
-                  Icons.abc,
-                  false,
-                  signUpEmailController,
-                  validateName,
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 1.5,
-                      child: reusableTextField(
-                          "Password",
-                          Icons.password,
-                          true,
-                          signUpPasswordController,
-                          validatePassword,
-                          showPassword),
-                    ),
-                    Checkbox(
-                        activeColor: const Color.fromARGB(255, 142, 15, 6),
-                        value: showPassword,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            showPassword = value!;
-                          });
-                        }),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                reusableTextField("Phone Number", Icons.phone_android, false,
-                    signUpPhoneController, validatePhone),
-                const SizedBox(height: 20),
-                resuableButton(context, "SIGN UP", 200.0, () async {
-                  if (signUpFormKey.currentState!.validate()) {
-                    // final auth = Authentication.instance;
-                    // logIn = await auth.createUserWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim());
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("SUCCESSFUL")));
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BottomNavPage()));
-                  }
-                }),
-                const SizedBox(height: 10),
-                const Text("Already Registered?"),
-                const SizedBox(height: 10),
-                TextButton(
-                    onPressed: () async {
-                      setState(() {
-                        isSignInForm = true;
-                      });
-                    },
-                    child: const Text(
-                      "SIGN IN",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 142, 15, 6),
-                        fontSize: 20,
-                      ),
-                    )),
-              ],
-            ),
+        //Signup form
+        Form(
+          key: signUpFormKey,
+          child: Column(
+            children: [
+              reusableTextField(
+                "E-mail",
+                Icons.abc,
+                false,
+                signUpEmailController,
+                validateName,
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.5,
+                    child: reusableTextField(
+                        "Password",
+                        Icons.password,
+                        true,
+                        signUpPasswordController,
+                        validatePassword,
+                        showPassword),
+                  ),
+                  _buildShowPasswordCheckBox(),
+                ],
+              ),
+              const SizedBox(height: 20),
+              reusableTextField("Phone Number", Icons.phone_android, false,
+                  signUpPhoneController, validatePhone),
+              const SizedBox(height: 20),
+              resuableButton(context, "SIGN UP", 200.0, _validateSignUp),
+              const SizedBox(height: 10),
+              const Text("Already Registered?"),
+              const SizedBox(height: 10),
+              _buildChangeFormButton("SIGN IN HERE"),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -146,22 +101,10 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
         Column(
           children: [
             const SizedBox(height: 10),
-            const Text(
-              "Sign In",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            _buildSignUpInText('SIGN IN'),
             const SizedBox(height: 20),
-            const Text(
-              "Sign in to continue!",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-              ),
-            ),
+            const Text("Sign in to continue!",
+                style: TextStyle(color: Colors.black, fontSize: 15)),
             const SizedBox(height: 20),
 
             //Signup form
@@ -184,42 +127,16 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
                             validteSignInPassword,
                             showPassword),
                       ),
-                      Checkbox(
-                          activeColor: const Color.fromARGB(255, 142, 15, 6),
-                          value: showPassword,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              showPassword = value!;
-                            });
-                          }),
+                      _buildShowPasswordCheckBox(),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  Card(
-                    color: const Color.fromARGB(255, 199, 196, 196),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        side: const BorderSide(
-                          color: Colors.grey,
-                          width: 1.0,
-                        )),
-                    child: const Center(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(width: 5),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  resuableButton(context, "SIGN IN", 200.0,signInFormValidate ),
+                  resuableButton(context, "SIGN IN", 200.0, _validateSignIn),
                   const SizedBox(height: 10),
                   const Text("New User?",
                       style: TextStyle(color: Colors.black)),
                   const SizedBox(height: 10),
-                  _buildRegisterHereButton(),
+                  _buildChangeFormButton("REGISTER HERE"),
                 ],
               ),
             ),
@@ -252,37 +169,66 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
     );
   }
 
-  Widget _buildRegisterHereButton() {
+  Widget _buildChangeFormButton(text) {
     return TextButton(
         onPressed: () {
           setState(() {
-            isSignInForm = false;
+            isSignInForm = !isSignInForm;
           });
         },
-        child: const Text(
-          "REGISTER HERE",
-          style: TextStyle(
+        child: Text(
+          '$text',
+          style: const TextStyle(
             color: Color.fromARGB(255, 142, 15, 6),
             fontSize: 20,
           ),
         ));
   }
 
-  signInFormValidate() async {
-                    if (signInFormKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("SUCCESSFUL"),
-                        ),
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BottomNavPage()),
-                      );
-                    }
-                  }
+  Widget _buildShowPasswordCheckBox() {
+    return Checkbox(
+        activeColor: const Color.fromARGB(255, 142, 15, 6),
+        value: showPassword,
+        onChanged: (bool? value) {
+          setState(() {
+            showPassword = value!;
+          });
+        });
+  }
 
+  Widget _buildSignUpInText(text){
+    return  Text("$text",
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold));
+  }
+
+  _validateSignIn() async {
+    if (signInFormKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("SUCCESSFUL"),
+        ),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => BottomNavPage()),
+      );
+    }
+  }
+
+  _validateSignUp() async {
+    if (signUpFormKey.currentState!.validate()) {
+      // final auth = Authentication.instance;
+      // logIn = await auth.createUserWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim());
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("SUCCESSFUL")));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => BottomNavPage()));
+    }
+  }
 }
 
 // Future<bool> checkValue(phoneController, passwordController) async {
