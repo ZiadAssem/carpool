@@ -5,6 +5,7 @@ abstract class Ride {
   final String rider;
   final bool isMorningRide;
   int numberOfSeats;
+  int price;
   String status;
 
   Ride({
@@ -14,6 +15,7 @@ abstract class Ride {
     required this.rider,
     required this.isMorningRide,
     required this.numberOfSeats,
+    required this.price,
     required this.status
   });
 
@@ -32,6 +34,8 @@ class CampusRide extends Ride {
     required String source,
     required String rider,
     required int numberOfSeats,
+    required   int price,
+
     required String status,
   }) : super(
           id: id,
@@ -40,6 +44,7 @@ class CampusRide extends Ride {
           destination: 'CAMPUS',
           isMorningRide: true,
           numberOfSeats: numberOfSeats,
+          price: price,
           status: status,
         );
 
@@ -49,6 +54,7 @@ class CampusRide extends Ride {
       source: json['source'],
       rider: json['rider'],
       numberOfSeats: json['numberOfSeats'],
+      price: json['price'],
       status: json['status'],
     );
   }
@@ -59,6 +65,7 @@ class CampusRide extends Ride {
       'source': source,
       'rider': rider,
       'numberOfSeats': numberOfSeats,
+      'price': price,
       'status': status,
     };
   }
@@ -70,6 +77,7 @@ class HomeRide extends Ride {
     required String destination,
     required String rider,
     required int numberOfSeats,
+    required int price,
     required String status,
   }) : super(
           id: id,
@@ -78,6 +86,7 @@ class HomeRide extends Ride {
           rider: rider,
           isMorningRide: false,
           numberOfSeats: numberOfSeats,
+          price: price,
           status: status,
         );
 
@@ -87,6 +96,7 @@ class HomeRide extends Ride {
       destination: json['destination'],
       rider: json['rider'],
       numberOfSeats: json['numberOfSeats'],
+      price: json['price'],
       status: json['status'],
     );
   }
@@ -98,6 +108,7 @@ class HomeRide extends Ride {
       'destination': destination,
       'rider': rider,
       'numberOfSeats': numberOfSeats,
+      'price': price,
       'status': status,
     };
   }

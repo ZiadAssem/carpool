@@ -1,5 +1,6 @@
 import 'package:carpool/firebase/sign-up-failure.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class Authentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -7,7 +8,6 @@ class Authentication {
   Authentication._();
   static final Authentication _instance = Authentication._();
   static Authentication get instance => _instance;
-  
 
   isUserSignedIn() {
     _auth.authStateChanges().listen((User? user) {
@@ -19,18 +19,19 @@ class Authentication {
     });
   }
 
-  createUserWithEmailAndPassword(emailAddress, password) async {
+  Future<String?> createUserWithEmailAndPassword(
+      String emailAddress, String password) async {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
         email: emailAddress,
         password: password,
       );
-     isUserSignedIn();
+      return null; // Return null for success
     } on FirebaseAuthException catch (e) {
       final ex = SignUpWithEmailAndPasswordFailure.code(e.code);
-      return ex.message;
+      return ex.message; // Return the error message for failure
     } catch (e) {
-      return e;
+      return e.toString(); // Return a string representation of other exceptions
     }
   }
 
@@ -46,4 +47,10 @@ class Authentication {
       }
     }
   }
+
+  getCurrentUser(context) async {
+    final User? user =  _auth.currentUser;
+    final uid = user!.uid;
+    return uid;
+    }
 }

@@ -9,6 +9,7 @@ CampusRide campusRide1 = CampusRide(
     source: 'MAADI',
     rider: 'Ahmed',
     numberOfSeats: 4,
+    price: 30,
     status: 'AVAILABLE');
 
 CampusRide campusRide2 = CampusRide(
@@ -16,6 +17,8 @@ CampusRide campusRide2 = CampusRide(
     source: 'NEWCAIRO',
     rider: 'Ahmed',
     numberOfSeats: 2,
+        price: 30,
+
     status: 'AVAILABLE');
 
 CampusRide campusRide3 = CampusRide(
@@ -23,6 +26,8 @@ CampusRide campusRide3 = CampusRide(
     source: 'HELIOPLIS',
     rider: 'Ahmed',
     numberOfSeats: 3,
+        price: 30,
+
     status: 'AVAILABLE');
 
 HomeRide homeRide1 = HomeRide(
@@ -30,6 +35,8 @@ HomeRide homeRide1 = HomeRide(
     destination: 'Maadi',
     rider: 'Ahmed',
     numberOfSeats: 1,
+        price: 30,
+
     status: 'AVAILABLE');
 
 List<CampusRide> CampusRides = [campusRide1, campusRide2, campusRide3];
@@ -141,7 +148,7 @@ class _RoutesState extends State<Routes> with TickerProviderStateMixin {
           style: const TextStyle(color: Colors.black), // Adjust text color
         ),
         const SizedBox(height: 4),
-        Text(
+        const Text(
           "7:30",
           style: TextStyle(color: Colors.black), // Adjust text color
         ),
@@ -171,7 +178,7 @@ class _RoutesState extends State<Routes> with TickerProviderStateMixin {
                     const TextStyle(color: Colors.black), // Adjust text color
               ),
               const SizedBox(height: 4),
-              Text(
+              const Text(
                 "5:30",
                 style: TextStyle(color: Colors.black), // Adjust text color
               ),

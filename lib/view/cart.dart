@@ -10,6 +10,7 @@ CampusRide ride = CampusRide(
     source: 'MAADI',
     rider: 'Ahmed',
     numberOfSeats: 4,
+    price: 50,
     status: 'AVAILABLE');
 
 //create a list of dummy rides

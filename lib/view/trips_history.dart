@@ -7,6 +7,8 @@ CampusRide ride1 = CampusRide(
   source: 'MAADI',
   rider: 'Ahmed',
   numberOfSeats: 4,
+      price: 30,
+
   status: 'COMPLETE',
 );
 CampusRide ride2 = CampusRide(
@@ -14,6 +16,8 @@ CampusRide ride2 = CampusRide(
   source: 'NEWCAIRO',
   rider: 'Ahmed',
   numberOfSeats: 2,
+      price: 30,
+
   status: 'COMPLETE',
 );
 CampusRide ride3 = CampusRide(
@@ -21,6 +25,8 @@ CampusRide ride3 = CampusRide(
   source: 'HELIOPLIS',
   rider: 'Ahmed',
   numberOfSeats: 3,
+      price: 30,
+
   status: 'COMPLETE',
 );
 CampusRide ride4 = CampusRide(
@@ -28,6 +34,8 @@ CampusRide ride4 = CampusRide(
   source: 'DOWNTOWN',
   rider: 'Ahmed',
   numberOfSeats: 1,
+      price: 30,
+
   status: 'COMPLETE',
 );
 List<Ride> previousRides = [ride1, ride2, ride3, ride4];

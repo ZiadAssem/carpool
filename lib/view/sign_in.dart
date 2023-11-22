@@ -1,5 +1,9 @@
 import 'dart:convert';
+import 'package:carpool/controller/signup_controller.dart';
 
+import '../controller/signin_controller.dart';
+import '../firebase/sign-up-failure.dart';
+import 'package:carpool/firebase/authentication.dart';
 import 'package:carpool/reusable_widget.dart';
 import 'package:carpool/view/routes.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +34,9 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
       body: Stack(
         children: [
           _buildSignInBackground(),
+          Container(
+              height: double.infinity,
+              decoration: BoxDecoration(color: Colors.black.withOpacity(0.3))),
           _buildSignInOrSignUpForm(),
         ],
       ),
@@ -104,7 +111,7 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
             _buildSignUpInText('SIGN IN'),
             const SizedBox(height: 20),
             const Text("Sign in to continue!",
-                style: TextStyle(color: Colors.black, fontSize: 15)),
+                style: TextStyle(color: Colors.white, fontSize: 15)),
             const SizedBox(height: 20),
 
             //Signup form
@@ -196,37 +203,42 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
         });
   }
 
-  Widget _buildSignUpInText(text){
-    return  Text("$text",
-                style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold));
+  Widget _buildSignUpInText(text) {
+    return Text("$text",
+        style: const TextStyle(
+            color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold));
   }
 
   _validateSignIn() async {
     if (signInFormKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("SUCCESSFUL"),
-        ),
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => BottomNavPage()),
-      );
+      try {
+         SignInController.signInUser(context, signInEmailController.text.trim(), signInEmailController.text);
+      } on Exception catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+           SnackBar(
+            content: Text(e.toString()),
+          ),
+        );
+      }
     }
   }
 
   _validateSignUp() async {
     if (signUpFormKey.currentState!.validate()) {
-      // final auth = Authentication.instance;
-      // logIn = await auth.createUserWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim());
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("SUCCESSFUL")));
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => BottomNavPage()));
+      try {
+        SignUpController.registerUser(
+          context,
+          signUpEmailController.text.trim(),
+          signUpPasswordController.text.trim(),
+        );
+        // Navigator.pushReplacement(
+        //     context, MaterialPageRoute(builder: (context) => BottomNavPage()));
+      } on Exception catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(SignUpWithEmailAndPasswordFailure.code(e.toString())
+                .toString())));
+      }
     }
   }
 }
