@@ -1,4 +1,4 @@
-import 'Routes.dart';
+import 'routes_class.dart';
 
 class Trip {
   Route route;
@@ -16,7 +16,7 @@ class Trip {
     required this.numberOfSeatsLeft,
     required this.price,
     required this.status,
-    required this.date, // Added date parameter
+    required this.date,
   });
 
   factory Trip.fromJson(Map<String, dynamic> json) {
@@ -42,6 +42,7 @@ class Trip {
       'date': date.toIso8601String(), // Convert date to ISO 8601 string
     };
   }
+  
 }
 
 class HomeTrip extends Trip {
@@ -111,3 +112,47 @@ class TripRequest {
     };
   }
 }
+
+HomeTrip maadiHomeTrip1 = HomeTrip(
+    route: maadiRoute,
+    gate: 3,
+    driver: 'Ahmed',
+    numberOfSeatsLeft: 3,
+    price: 30,
+    status: 'available',
+    date: DateTime.now());
+HomeTrip maadiHomeTrip2 = HomeTrip(
+    route: maadiRoute,
+    gate: 3,
+    driver: 'Ahmed',
+    numberOfSeatsLeft: 3,
+    price: 30,
+    status: 'available',
+    date: DateTime.now());
+
+CampusTrip maadiCampusTrip1 = CampusTrip(
+    route: maadiRoute,
+    gate: 3,
+    driver: 'Ahmed',
+    numberOfSeatsLeft: 3,
+    price: 30,
+    status: 'available',
+    date: DateTime.now());
+
+CampusTrip helioplisCampusTrip1 = CampusTrip(
+    route: helioplisRoute,
+    gate: 3,
+    driver: 'Omar',
+    numberOfSeatsLeft: 3,
+    price: 30,
+    status: 'available',
+    date: DateTime.now());
+
+List<List<Trip>> maadiTrips =[
+  [maadiHomeTrip1, maadiHomeTrip2],
+  [maadiCampusTrip1],
+];
+
+List<List<Trip>> helioplisTrips =[
+  [helioplisCampusTrip1],
+];

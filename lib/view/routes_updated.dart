@@ -1,52 +1,18 @@
-import 'package:carpool/reusable_widget.dart';
+import 'package:carpool/classes/ride.dart';
+import 'package:carpool/classes_updated/routes_class.dart';
 import 'package:flutter/material.dart';
 
-import '../classes/ride.dart';
-import 'trip_details.dart';
+import '../reusable_widget.dart';
 
-CampusRide campusRide1 = CampusRide(
-    id: '1',
-    source: 'MAADI',
-    rider: 'Ahmed',
-    numberOfSeats: 4,
-    price: 30,
-    status: 'AVAILABLE');
-
-CampusRide campusRide2 = CampusRide(
-    id: '2',
-    source: 'NEWCAIRO',
-    rider: 'Ahmed',
-    numberOfSeats: 2,
-    price: 30,
-    status: 'AVAILABLE');
-
-CampusRide campusRide3 = CampusRide(
-    id: '3',
-    source: 'HELIOPLIS',
-    rider: 'Ahmed',
-    numberOfSeats: 3,
-    price: 30,
-    status: 'AVAILABLE');
-
-HomeRide homeRide1 = HomeRide(
-    id: '4',
-    destination: 'Maadi',
-    rider: 'Ahmed',
-    numberOfSeats: 1,
-    price: 30,
-    status: 'AVAILABLE');
-
-List<CampusRide> CampusRides = [campusRide1, campusRide2, campusRide3];
-List<HomeRide> HomeRides = [homeRide1];
-
-class Routes extends StatefulWidget {
-  const Routes({Key? key});
+class RoutesUpdated extends StatefulWidget {
+  const RoutesUpdated({super.key});
 
   @override
-  State<Routes> createState() => _RoutesState();
+  State<RoutesUpdated> createState() => _RoutesUpdatedState();
 }
 
-class _RoutesState extends State<Routes> with TickerProviderStateMixin {
+class _RoutesUpdatedState extends State<RoutesUpdated>
+    with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -58,15 +24,68 @@ class _RoutesState extends State<Routes> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: reusableAppBar('Routes', _buildTabBar()),
-      backgroundColor: Colors.transparent,
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildRideList(CampusRides, false),
-          _buildRideList(HomeRides, true),
-        ],
+      appBar: reusableAppBar('RoutesUpdated', null),
+      //backgroundColor: Colors.transparent,
+      body: _buildRoutesList(),
+    );
+  }
+
+  Widget _buildRoutesList() {
+    return ListView.builder(
+      itemCount: routesLocations.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          child: _buildRoute(routesLocations, index),
+        );
+      },
+    );
+  }
+
+  Widget _buildRoute(routesLocations, int index) {
+    final route = routesLocations[index];
+
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
       ),
+      elevation: 8,
+      color: Colors.white,
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        title: Text(
+          route.location,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 142, 15, 6),
+          ),
+        ),
+        subtitle: Text(
+          'Tap to view details',
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[600],
+          ),
+        ),
+        trailing: Icon(
+          Icons.arrow_forward,
+          color: Color.fromARGB(255, 142, 15, 6),
+        ),
+        onTap: () {
+          // Handle tap
+        },
+      ),
+    );
+  }
+
+  Widget _buildTabBarView(CampusRides, HomeRides) {
+    return TabBarView(
+      controller: _tabController,
+      children: [
+        // _buildRideList(CampusRides, false),
+        // _buildRideList(HomeRides, true),
+      ],
     );
   }
 
@@ -78,61 +97,6 @@ class _RoutesState extends State<Routes> with TickerProviderStateMixin {
         Tab(icon: Icon(Icons.directions_bus_rounded), text: "Campus Rides"),
         Tab(icon: Icon(Icons.home_rounded), text: "Home Rides"),
       ],
-    );
-  }
-
-  Widget _buildRideList(List<Ride> rides, bool isHomeRide) {
-    return ListView.builder(
-      itemCount: rides.length,
-      itemBuilder: (context, index) {
-        return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: isHomeRide
-                ? _buildRide(rides, index, true)
-                : _buildRide(rides, index, false));
-      },
-    );
-  }
-
-  Widget _buildRide(rides, index, isHomeRide) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      elevation: 8,
-      color: const Color.fromARGB(
-          255, 255, 255, 255), // Card background color (white)
-      child: ListTile(
-        title: Text(
-          rides[index].source,
-          style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 142, 15, 6)), // Adjust text color
-        ),
-        subtitle: Text(
-          'Driver: ${rides[index].rider}',
-          style: const TextStyle(
-              color: Color.fromARGB(255, 142, 15, 6)), // Adjust text color
-        ),
-        leading: const Icon(
-          Icons.bus_alert_rounded,
-          color: Color.fromARGB(255, 142, 15, 6), // Adjust icon color
-        ),
-        trailing: isHomeRide
-            ? _buildHomeRide(rides, index)
-            : _buildCampusRide(rides, index),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TripDetails(
-                ride: rides[index],
-              ),
-            ),
-          );
-        },
-      ),
     );
   }
 

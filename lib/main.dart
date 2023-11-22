@@ -2,6 +2,7 @@
 // import 'package:carpool/routes.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:carpool/firebase_options.dart';
+import 'package:carpool/view/routes_updated.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: SignInScreen(),
+      home: RoutesUpdated(),
     );
   }
 }
