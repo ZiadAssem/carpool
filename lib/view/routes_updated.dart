@@ -1,49 +1,73 @@
 import 'package:carpool/classes/ride.dart';
 import 'package:carpool/classes_updated/routes_class.dart';
+import 'package:carpool/firebase/database.dart';
+import 'package:carpool/view/trips.dart';
 import 'package:flutter/material.dart';
+import '../classes_updated/routes_class.dart' as R;
+
 
 import '../reusable_widget.dart';
 
 class RoutesUpdated extends StatefulWidget {
   const RoutesUpdated({super.key});
-
+    
   @override
   State<RoutesUpdated> createState() => _RoutesUpdatedState();
 }
 
 class _RoutesUpdatedState extends State<RoutesUpdated>
-    with TickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
+    {
+ 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: reusableAppBar('RoutesUpdated', null),
-      //backgroundColor: Colors.transparent,
-      body: _buildRoutesList(),
+      backgroundColor: Colors.transparent,
+      body: _buildRoutesListFromDb(),
     );
   }
 
-  Widget _buildRoutesList() {
+  Widget _buildRoutesListFromDb(){
+    
+    return FutureBuilder<List<R.Route>>(
+      future: DatabaseHelper.instance.getRoutesFromDb() ,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState==ConnectionState.waiting){
+          return const Center(child: CircularProgressIndicator());
+        }
+        else if (snapshot.hasData) {
+
+          List <R.Route> routes = snapshot.data!;
+
+          print(routes.length);
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          child: _buildRoutesList(routes),
+        );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return Text("No data");
+      },
+    );
+  }
+
+  Widget _buildRoutesList(databaseRoutes) {
     return ListView.builder(
-      itemCount: routesLocations.length,
+      itemCount: databaseRoutes.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: _buildRoute(routesLocations, index),
+          child: _buildRoute(databaseRoutes, index),
         );
       },
     );
   }
 
-  Widget _buildRoute(routesLocations, int index) {
-    final route = routesLocations[index];
+  Widget _buildRoute(databaseRoutes, int index) {
+    final route = databaseRoutes[index];
 
     return Card(
       shape: RoundedRectangleBorder(
@@ -52,10 +76,10 @@ class _RoutesUpdatedState extends State<RoutesUpdated>
       elevation: 8,
       color: Colors.white,
       child: ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         title: Text(
           route.location,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Color.fromARGB(255, 142, 15, 6),
@@ -68,97 +92,26 @@ class _RoutesUpdatedState extends State<RoutesUpdated>
             color: Colors.grey[600],
           ),
         ),
-        trailing: Icon(
+        trailing: const Icon(
           Icons.arrow_forward,
           color: Color.fromARGB(255, 142, 15, 6),
         ),
-        onTap: () {
-          // Handle tap
-        },
+        onTap: () async{
+         final trips = await DatabaseHelper.instance.getTripsFromDb(route.location);
+         if(!context.mounted) return;
+         Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TripPage( trips: trips, location: route.location),
+            ),
+         );
+
+                  },
       ),
     );
   }
 
-  Widget _buildTabBarView(CampusRides, HomeRides) {
-    return TabBarView(
-      controller: _tabController,
-      children: [
-        // _buildRideList(CampusRides, false),
-        // _buildRideList(HomeRides, true),
-      ],
-    );
-  }
-
-  Widget _buildTabBar() {
-    return TabBar(
-      indicatorColor: Colors.white,
-      controller: _tabController,
-      tabs: const <Widget>[
-        Tab(icon: Icon(Icons.directions_bus_rounded), text: "Campus Rides"),
-        Tab(icon: Icon(Icons.home_rounded), text: "Home Rides"),
-      ],
-    );
-  }
-
-  Widget _buildCampusRide(rides, index) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "Seats Left: ${rides[index].numberOfSeats}",
-          style: const TextStyle(color: Colors.black), // Adjust text color
-        ),
-        const SizedBox(height: 4),
-        const Text(
-          "7:30",
-          style: TextStyle(color: Colors.black), // Adjust text color
-        ),
-        const SizedBox(height: 4),
-        isBefore10PM()
-            ? Text(
-                "${getTomorrowDate()}",
-                style:
-                    const TextStyle(color: Colors.black), // Adjust text color
-              )
-            : Text(
-                "${getAfterTomorrowDate()}",
-                style:
-                    const TextStyle(color: Colors.black), // Adjust text color
-              ),
-      ],
-    );
-  }
-
-  Widget _buildHomeRide(rides, index) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "Seats Left: ${rides[index].numberOfSeats}",
-          style: const TextStyle(color: Colors.black), // Adjust text color
-        ),
-        const SizedBox(height: 4),
-        const Text(
-          "5:30",
-          style: TextStyle(color: Colors.black), // Adjust text color
-        ),
-        const SizedBox(height: 4),
-        isBefore1PM()
-            ? Text(
-                "${getTodayDate()}",
-                style:
-                    const TextStyle(color: Colors.black), // Adjust text color
-              )
-            : Text(
-                "${getTomorrowDate()}",
-                style:
-                    const TextStyle(color: Colors.black), // Adjust text color
-              )
-      ],
-    );
-  }
-
-  bool isBefore1PM() {
+   bool isBefore1PM() {
     DateTime now = DateTime.now();
     DateTime onePM = DateTime(now.year, now.month, now.day, 13, 0, 0);
 

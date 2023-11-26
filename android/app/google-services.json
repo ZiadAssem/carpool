@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "541906143779",
+    "firebase_url": "https://carpool-project-111-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "carpool-project-111",
     "storage_bucket": "carpool-project-111.appspot.com"
   },

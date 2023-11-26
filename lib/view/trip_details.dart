@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import '../classes/ride.dart';
+import '../classes_updated/trip_class.dart';
 
 class TripDetails extends StatefulWidget {
-  const TripDetails({super.key, required this.ride});
-  final Ride ride;
+  const TripDetails(
+      {super.key,
+      required this.trip,
+      required this.location,
+      required this.isHomeRide});
+  final Trip trip;
+  final String location;
+  final bool isHomeRide;
 
   @override
   State<TripDetails> createState() => _TripDetailsState();
@@ -23,9 +30,9 @@ class _TripDetailsState extends State<TripDetails> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildRideDetails(),
+              _buildTripDetails(),
               const SizedBox(height: 16),
-              _buildRequestRideButton(),
+              _buildRequestTripButton(),
             ],
           ),
         ),
@@ -33,7 +40,7 @@ class _TripDetailsState extends State<TripDetails> {
     );
   }
 
-  Widget _buildRideDetails() {
+  Widget _buildTripDetails() {
     return Card(
       elevation: 4.0,
       child: Padding(
@@ -41,16 +48,13 @@ class _TripDetailsState extends State<TripDetails> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'From ${widget.ride.source} to ${widget.ride.destination}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+            _buildtripDestination(),
             const SizedBox(height: 8),
-            _buildDetailRow('Rider:', widget.ride.rider),
+            _buildDetailRow('Rider:', widget.trip.driver),
             _buildDetailRow(
-                'Time:', widget.ride.isMorningRide ? 'Morning' : 'Evening'),
+                'Time:', widget.isHomeRide ? 'Evening' : 'Morning'),
             _buildDetailRow(
-                'Available Seats:', widget.ride.numberOfSeats.toString()),
+                'Available Seats:', widget.trip.numberOfSeatsLeft.toString()),
           ],
         ),
       ),
@@ -73,7 +77,7 @@ class _TripDetailsState extends State<TripDetails> {
     );
   }
 
-  Widget _buildRequestRideButton() {
+  Widget _buildRequestTripButton() {
     return ElevatedButton(
       onPressed: () {
         showConfirmationMenu(context);
@@ -83,7 +87,7 @@ class _TripDetailsState extends State<TripDetails> {
         padding: const EdgeInsets.all(16),
       ),
       child: const Text(
-        'Request Ride',
+        'Request trip',
         style: TextStyle(fontSize: 18),
       ),
     );
@@ -92,11 +96,11 @@ class _TripDetailsState extends State<TripDetails> {
   void showConfirmationMenu(BuildContext context) async {
     final selectedOption = await showMenu(
       context: context,
-      position: RelativeRect.fromLTRB(10, MediaQuery.of(context).size.height*0.5, 0, 0),
+      position: RelativeRect.fromLTRB(
+          10, MediaQuery.of(context).size.height * 0.5, 0, 0),
       items: [
         _buildPopUpMenuItem('Confirm', const Icon(Icons.check)),
-
-       _buildPopUpMenuItem("Cancel",const Icon(Icons.cancel)),
+        _buildPopUpMenuItem("Cancel", const Icon(Icons.cancel)),
       ],
       elevation: 8.0,
     );
@@ -105,23 +109,23 @@ class _TripDetailsState extends State<TripDetails> {
     _handleSelectedOption(selectedOption);
   }
 
-  PopupMenuItem _buildPopUpMenuItem(String text,Icon icon){
-    return  PopupMenuItem(
-          value:text,
-          child: ListTile(
-            title: Text(text),
-            leading: icon,
-          ),
-        );
+  PopupMenuItem _buildPopUpMenuItem(String text, Icon icon) {
+    return PopupMenuItem(
+      value: text,
+      child: ListTile(
+        title: Text(text),
+        leading: icon,
+      ),
+    );
   }
-  
+
   void _handleSelectedOption(selectedOption) {
     if (selectedOption == 'Confirm') {
       // Perform action for confirmation
       //show snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Ride Requested'),
+          content: Text('trip Requested'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -130,10 +134,23 @@ class _TripDetailsState extends State<TripDetails> {
       //show snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Ride Request Cancelled'),
+          content: Text('trip Request Cancelled'),
           duration: Duration(seconds: 2),
         ),
       );
     }
+  }
+
+  Widget _buildtripDestination() {
+    if (widget.isHomeRide) {
+      return Text(
+        'From ${widget.trip.gate} to ${widget.location}',
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      );
+    }
+    return Text(
+      'From ${widget.location} to ${widget.trip.gate}',
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    );
   }
 }

@@ -1,8 +1,9 @@
+import 'package:carpool/view/routes_updated.dart';
 import 'package:flutter/material.dart';
 
 import 'cart.dart';
 import 'profile.dart';
-import 'routes.dart'; // Import your Profile page
+import 'deprecated_views/routes.dart'; // Import your Profile page
 
 class BottomNavPage extends StatefulWidget {
   @override
@@ -11,19 +12,26 @@ class BottomNavPage extends StatefulWidget {
 
 class _BottomNavPageState extends State<BottomNavPage> {
   int _currentIndex = 0;
+  
   final PageController _pageController = PageController(initialPage: 0);
 
   final List<Widget> _pages = [
-    const Routes(),
+    const RoutesUpdated(),
     const CartPage(),
     ProfilePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildPageView(),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+    return Stack(
+      children: [
+        _buildMainBackground(),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          body: _buildPageView(),
+          bottomNavigationBar: _buildBottomNavigationBar(),
+        ),
+      ],
     );
   }
 
@@ -51,7 +59,7 @@ class _BottomNavPageState extends State<BottomNavPage> {
 
   Widget _buildPageView() {
     return Container(
-      decoration: _buildMainBackground(),
+      // decoration: _buildMainBackground(),
       child: PageView(
         controller: _pageController,
         onPageChanged: (index) {
@@ -64,12 +72,14 @@ class _BottomNavPageState extends State<BottomNavPage> {
     );
   }
 
-  BoxDecoration _buildMainBackground() {
-    return const BoxDecoration(
-      color: Colors.white,
-      image: DecorationImage(
-        image: AssetImage("assets/images/car-background.jpg"),
-        fit: BoxFit.fitWidth,
+  Widget _buildMainBackground() {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        image: DecorationImage(
+          image: AssetImage("assets/images/car-background.jpg"),
+          fit: BoxFit.fitWidth,
+        ),
       ),
     );
   }

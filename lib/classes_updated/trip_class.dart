@@ -1,16 +1,19 @@
+import 'package:carpool/firebase/database.dart';
+import 'package:firebase_database/firebase_database.dart';
+
 import 'routes_class.dart';
 
 class Trip {
-  Route route;
+  // Route route;
   int gate;
   int price;
   String driver;
-  String numberOfSeatsLeft;
+  int numberOfSeatsLeft;
   String status;
   DateTime date; // Added date property
 
   Trip({
-    required this.route,
+    // required this.route,
     required this.gate,
     required this.driver,
     required this.numberOfSeatsLeft,
@@ -19,21 +22,24 @@ class Trip {
     required this.date,
   });
 
-  factory Trip.fromJson(Map<String, dynamic> json) {
+  factory Trip.fromJson(json) {
     return Trip(
-      route: Route.fromJson(json['route']),
+      // route: Route.fromJson(json['route']),
       gate: json['gate'],
       driver: json['driver'],
       numberOfSeatsLeft: json['numberOfSeatsLeft'],
       price: json['price'],
       status: json['status'],
-      date: DateTime.parse(json['date']), // Parse date from JSON string
+      //for testing
+      // date: DateTime.parse(json['date']), 
+      date: DateTime.now(),
+      //// Parse date from JSON string
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'route': route,
+      // 'route': route,
       'gate': gate,
       'driver': driver,
       'numberOfSeatsLeft': numberOfSeatsLeft,
@@ -42,12 +48,14 @@ class Trip {
       'date': date.toIso8601String(), // Convert date to ISO 8601 string
     };
   }
-  
+
+
+
 }
 
 class HomeTrip extends Trip {
   HomeTrip({
-    required route,
+  //  required route,
     required gate,
     required driver,
     required numberOfSeatsLeft,
@@ -55,7 +63,7 @@ class HomeTrip extends Trip {
     required status,
     required date,
   }) : super(
-          route: route,
+        //  route: route,
           gate: gate,
           driver: driver,
           numberOfSeatsLeft: numberOfSeatsLeft,
@@ -67,7 +75,7 @@ class HomeTrip extends Trip {
 
 class CampusTrip extends Trip {
   CampusTrip({
-    required route,
+ //   required route,
     required gate,
     required driver,
     required numberOfSeatsLeft,
@@ -75,7 +83,7 @@ class CampusTrip extends Trip {
     required status,
     required date,
   }) : super(
-          route: route,
+    //      route: route,
           gate: gate,
           driver: driver,
           numberOfSeatsLeft: numberOfSeatsLeft,
@@ -84,6 +92,8 @@ class CampusTrip extends Trip {
           date: date,
         );
 }
+
+
 
 class TripRequest {
   Trip trip;
@@ -114,7 +124,7 @@ class TripRequest {
 }
 
 HomeTrip maadiHomeTrip1 = HomeTrip(
-    route: maadiRoute,
+ //   route: maadiRoute,
     gate: 3,
     driver: 'Ahmed',
     numberOfSeatsLeft: 3,
@@ -122,7 +132,7 @@ HomeTrip maadiHomeTrip1 = HomeTrip(
     status: 'available',
     date: DateTime.now());
 HomeTrip maadiHomeTrip2 = HomeTrip(
-    route: maadiRoute,
+   // route: maadiRoute,
     gate: 3,
     driver: 'Ahmed',
     numberOfSeatsLeft: 3,
@@ -131,7 +141,7 @@ HomeTrip maadiHomeTrip2 = HomeTrip(
     date: DateTime.now());
 
 CampusTrip maadiCampusTrip1 = CampusTrip(
-    route: maadiRoute,
+   // route: maadiRoute,
     gate: 3,
     driver: 'Ahmed',
     numberOfSeatsLeft: 3,
@@ -140,7 +150,7 @@ CampusTrip maadiCampusTrip1 = CampusTrip(
     date: DateTime.now());
 
 CampusTrip helioplisCampusTrip1 = CampusTrip(
-    route: helioplisRoute,
+ //   route: helioplisRoute,
     gate: 3,
     driver: 'Omar',
     numberOfSeatsLeft: 3,

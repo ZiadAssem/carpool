@@ -23,15 +23,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -55,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '541906143779',
     projectId: 'carpool-project-111',
     authDomain: 'carpool-project-111.firebaseapp.com',
+    databaseURL: 'https://carpool-project-111-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'carpool-project-111.appspot.com',
   );
 
@@ -63,6 +58,27 @@ class DefaultFirebaseOptions {
     appId: '1:541906143779:android:f5a20c6476d631e0a7bf96',
     messagingSenderId: '541906143779',
     projectId: 'carpool-project-111',
+    databaseURL: 'https://carpool-project-111-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'carpool-project-111.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyBHlPT8OtJ0aFV5nWGrWxlOP7_qxzEfGK8',
+    appId: '1:541906143779:ios:289dd9dd306a1a61a7bf96',
+    messagingSenderId: '541906143779',
+    projectId: 'carpool-project-111',
+    databaseURL: 'https://carpool-project-111-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'carpool-project-111.appspot.com',
+    iosBundleId: 'com.example.carpool',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBHlPT8OtJ0aFV5nWGrWxlOP7_qxzEfGK8',
+    appId: '1:541906143779:ios:84d55d6e09fb3c7da7bf96',
+    messagingSenderId: '541906143779',
+    projectId: 'carpool-project-111',
+    databaseURL: 'https://carpool-project-111-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'carpool-project-111.appspot.com',
+    iosBundleId: 'com.example.carpool.RunnerTests',
   );
 }

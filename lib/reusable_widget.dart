@@ -74,3 +74,8 @@ PreferredSizeWidget reusableAppBar(title,TabBar){
       );
 }
 
+
+Color reusableColor() {
+  return const Color.fromARGB(255, 142, 15, 6);
+}
+

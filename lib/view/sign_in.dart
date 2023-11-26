@@ -5,7 +5,7 @@ import '../controller/signin_controller.dart';
 import '../firebase/sign-up-failure.dart';
 import 'package:carpool/firebase/authentication.dart';
 import 'package:carpool/reusable_widget.dart';
-import 'package:carpool/view/routes.dart';
+import 'package:carpool/view/deprecated_views/routes.dart';
 import 'package:flutter/material.dart';
 import '../validation_mixin.dart';
 import 'main_container.dart';
