@@ -12,6 +12,7 @@ import 'firebase/database.dart';
 import 'view/sign_in.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
@@ -29,7 +30,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
-      home: BottomNavPage(),
+      home: SignInScreen(),
     );
   }
 }

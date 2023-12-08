@@ -7,6 +7,9 @@ mixin ValidationMixin {
     if(value!.length<2){
       return 'Name should be at least 2 letters';
     }
+    if(value.contains(RegExp(r'[0-9]'))){
+      return 'Name should not contain numbers';
+    }
     return null;
   }
 // validates if password is at least 4 characters and contains an uppercase letter

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:carpool/firebase/database.dart';
 import 'package:carpool/view/main_container.dart';
 import 'package:flutter/material.dart';
 import '../firebase/authentication.dart';
@@ -8,7 +9,8 @@ class SignInController {
     // Call the Firebase instance method here
     String? error = await Authentication.instance
         .signInWithEmailAndPassword(email, password);
-
+    await DatabaseHelper.instance.getCurrentUser();
+    
     if (error == null) {
       // Navigate to the home page on success
       ScaffoldMessenger.of(context).showSnackBar(

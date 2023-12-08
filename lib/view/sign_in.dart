@@ -25,6 +25,7 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
   TextEditingController signUpEmailController = TextEditingController();
   TextEditingController signUpPasswordController = TextEditingController();
   TextEditingController signUpPhoneController = TextEditingController();
+  TextEditingController signUpNameController = TextEditingController();
   final signInFormKey = GlobalKey<FormState>();
   final signUpFormKey = GlobalKey<FormState>();
   bool showPassword = false;
@@ -48,7 +49,7 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 200),
+        const SizedBox(height: 120),
         _buildSignUpInText('SIGN UP'),
         const SizedBox(height: 20),
         const Text("Create an account to continue!",
@@ -60,13 +61,11 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
           key: signUpFormKey,
           child: Column(
             children: [
-              reusableTextField(
-                "E-mail",
-                Icons.abc,
-                false,
-                signUpEmailController,
-                validateName,
-              ),
+              reusableTextField("Full Name", Icons.person, false,
+                  signUpNameController, validateName),
+              const SizedBox(height: 20),
+              reusableTextField("E-mail", Icons.abc, false,
+                  signUpEmailController, validateEmail),
               const SizedBox(height: 20),
               Row(
                 children: [
@@ -212,10 +211,11 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
   _validateSignIn() async {
     if (signInFormKey.currentState!.validate()) {
       try {
-         SignInController.signInUser(context, signInEmailController.text.trim(), signInEmailController.text);
+        SignInController.signInUser(context, signInEmailController.text.trim().toLowerCase(),
+            signInPasswordController.text);
       } on Exception catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(
+          SnackBar(
             content: Text(e.toString()),
           ),
         );
@@ -225,15 +225,16 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
 
   _validateSignUp() async {
     if (signUpFormKey.currentState!.validate()) {
-
       try {
         SignUpController.registerUser(
           context,
-          signUpEmailController.text.trim(),
+          signUpNameController.text.trim(),
+          signUpEmailController.text.trim().toLowerCase(),
           signUpPasswordController.text.trim(),
+          signUpPhoneController.text.trim(),
         );
-        // Navigator.pushReplacement(
-        //     context, MaterialPageRoute(builder: (context) => BottomNavPage()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => BottomNavPage()));
       } on Exception catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(SignUpWithEmailAndPasswordFailure.code(e.toString())

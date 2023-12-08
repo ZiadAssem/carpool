@@ -1,9 +1,14 @@
 import 'package:carpool/firebase/sign-up-failure.dart';
+import 'package:carpool/view/sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:carpool/classes_updated/user_class.dart' as U;
+
+import 'database.dart';
 
 class Authentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  late String currentUserId;
 
   Authentication._();
   static final Authentication _instance = Authentication._();
@@ -19,13 +24,17 @@ class Authentication {
     });
   }
 
-  Future<String?> createUserWithEmailAndPassword(
-      String emailAddress, String password) async {
+  Future<String?> createUserWithEmailAndPassword(String fullName,
+      String emailAddress, String password, String phoneNumber) async {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
-        email: emailAddress,
-        password: password,
-      );
+          email: emailAddress, password: password);
+      U.User user =
+          U.User(name: fullName, email: emailAddress, phoneNumber: phoneNumber);
+
+      DatabaseHelper.instance.addUserToDb(user.toJson());
+      currentUserId = emailAddress.replaceAll("@eng.asu.edu.eg", "");
+
       return null; // Return null for success
     } on FirebaseAuthException catch (e) {
       final ex = SignUpWithEmailAndPasswordFailure.code(e.code);
@@ -39,18 +48,35 @@ class Authentication {
     try {
       final credential = await _auth.signInWithEmailAndPassword(
           email: emailAddress, password: password);
+      currentUserId = emailAddress.replaceAll("@eng.asu.edu.eg", "");
+      print("Current User *********************************");
+      print(currentUserId);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
+      }else{
+        print("Error is ${e.toString()}");
       }
     }
   }
 
   getCurrentUser(context) async {
-    final User? user =  _auth.currentUser;
+    final User? user = _auth.currentUser;
     final uid = user!.uid;
     return uid;
-    }
+  }
+
+  signOutUser(context) async {
+    await _auth.signOut();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => SignInScreen()));
+  }
+
+  deleteAccount(context) async {
+    await _auth.currentUser!.delete();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => SignInScreen()));
+  }
 }

@@ -1,9 +1,20 @@
+import 'package:carpool/classes_updated/user_class.dart';
+import 'package:carpool/firebase/authentication.dart';
 import 'package:carpool/reusable_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:carpool/firebase/database.dart';
+class ProfilePage extends StatefulWidget {
 
-class ProfilePage extends StatelessWidget {
+  // final _currentUser = await DatabaseHelper.instance.getCurrentUser();
   @override
-  Widget build(BuildContext context) {
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+   final _currentUser = DatabaseHelper.instance.currentUser;
+  @override
+  Widget build(BuildContext context)  {
     return Scaffold(
       appBar: reusableAppBar('Profile', null),
       backgroundColor: Colors.transparent,
@@ -18,9 +29,9 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 16),
               _buildDetailsCard(),
               const SizedBox(height: 16),
-              _buildButton('Sign Out', () => null),
+              _buildButton('Sign Out',()=> Authentication.instance.signOutUser(context)),
               const SizedBox(height: 8),
-              _buildButton('Delete Account', () => null),
+              _buildButton('Delete Account', ()=>Authentication.instance.deleteAccount(context)),
             ],
           ),
         ),
@@ -44,7 +55,7 @@ class ProfilePage extends StatelessWidget {
     return Card(
       color: Colors.white.withOpacity(0.9),
       elevation: 8,
-      child: const Padding(
+      child:  Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,8 +63,9 @@ class ProfilePage extends StatelessWidget {
             Text('User Details',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             SizedBox(height: 16),
-            ListTile(title: Text('Name: John Doe')),
-            ListTile(title: Text('Email: john.doe@eng.asu.edu.eg')),
+            ListTile(title: Text('Name: ${_currentUser.name}')),
+            ListTile(title: Text('Email: ${_currentUser.email}')),
+            ListTile(title: Text('Phone Number: ${_currentUser.phoneNumber}'),)
             // Add more user details as needed
           ],
         ),
@@ -69,4 +81,6 @@ class ProfilePage extends StatelessWidget {
       child: Text(text),
     );
   }
+
+  
 }
