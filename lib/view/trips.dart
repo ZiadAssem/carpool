@@ -104,6 +104,8 @@ class _TripPageState extends State<TripPage> with TickerProviderStateMixin {
             ? _buildHomeRide(rides, index)
             : _buildCampusRide(rides, index),
         onTap: () {
+          print(rides);
+          print(rides[index]);
           Navigator.push(
             context,
             MaterialPageRoute(

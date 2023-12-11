@@ -1,9 +1,16 @@
+import 'dart:ui';
+
+import 'package:carpool/classes_updated/triprequest_class.dart';
+import 'package:carpool/firebase/authentication.dart';
 import 'package:flutter/material.dart';
 import '../classes/ride.dart';
 import '../classes_updated/trip_class.dart';
+import '../firebase/database.dart';
 
 class TripDetails extends StatefulWidget {
-  const TripDetails(
+  
+
+   TripDetails(
       {super.key,
       required this.trip,
       required this.location,
@@ -11,6 +18,8 @@ class TripDetails extends StatefulWidget {
   final Trip trip;
   final String location;
   final bool isHomeRide;
+  var pickup;
+  var destination;
 
   @override
   State<TripDetails> createState() => _TripDetailsState();
@@ -50,6 +59,7 @@ class _TripDetailsState extends State<TripDetails> {
           children: [
             _buildtripDestination(),
             const SizedBox(height: 8),
+            _buildDetailRow('tripKey', widget.trip.tripKey),
             _buildDetailRow('Rider:', widget.trip.driver),
             _buildDetailRow(
                 'Time:', widget.isHomeRide ? 'Evening' : 'Morning'),
@@ -80,7 +90,7 @@ class _TripDetailsState extends State<TripDetails> {
   Widget _buildRequestTripButton() {
     return ElevatedButton(
       onPressed: () {
-        showConfirmationMenu(context);
+        _showConfirmationMenu(context);
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color.fromARGB(255, 142, 15, 6),
@@ -93,7 +103,7 @@ class _TripDetailsState extends State<TripDetails> {
     );
   }
 
-  void showConfirmationMenu(BuildContext context) async {
+  void _showConfirmationMenu(BuildContext context) async {
     final selectedOption = await showMenu(
       context: context,
       position: RelativeRect.fromLTRB(
@@ -121,7 +131,23 @@ class _TripDetailsState extends State<TripDetails> {
 
   void _handleSelectedOption(selectedOption) {
     if (selectedOption == 'Confirm') {
-      // Perform action for confirmation
+        if(widget.isHomeRide){
+     widget.destination = widget.location;
+     widget.pickup = widget.trip.gate;
+  }else{
+    widget.destination = widget.trip.gate;
+    widget.pickup = widget.location;
+  }
+      // Perform action for confirm
+      TripRequest data = TripRequest(
+      tripId: widget.trip.tripKey, 
+      driver: widget.trip.driver, 
+      user:Authentication.instance.currentUserId , 
+      status: widget.trip.status, 
+      pickup: widget.pickup, 
+      destination: widget.destination);
+      DatabaseHelper.instance.requestTrip(Authentication.instance.currentUserId, data.toJson());
+
       //show snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

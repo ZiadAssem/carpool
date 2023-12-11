@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carpool/firebase/sign-up-failure.dart';
 import 'package:carpool/view/sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +11,7 @@ import 'database.dart';
 class Authentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late String currentUserId;
+  bool isOnline = false;
 
   Authentication._();
   static final Authentication _instance = Authentication._();
@@ -46,19 +49,22 @@ class Authentication {
 
   signInWithEmailAndPassword(emailAddress, password) async {
     try {
-      final credential = await _auth.signInWithEmailAndPassword(
-          email: emailAddress, password: password);
-      currentUserId = emailAddress.replaceAll("@eng.asu.edu.eg", "");
+      final credential = await _auth
+          .signInWithEmailAndPassword(email: emailAddress, password: password)
+          .then((value) =>
+              currentUserId = emailAddress.replaceAll("@eng.asu.edu.eg", ""));
       print("Current User *********************************");
       print(currentUserId);
+      return null;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
-      }else{
+      } else {
         print("Error is ${e.toString()}");
       }
+return e.toString();
     }
   }
 

@@ -5,7 +5,8 @@ import 'routes_class.dart';
 
 class Trip {
   // Route route;
-  int gate;
+  String tripKey;
+  String gate;
   int price;
   String driver;
   int numberOfSeatsLeft;
@@ -14,6 +15,7 @@ class Trip {
 
   Trip({
     // required this.route,
+    required this.tripKey,
     required this.gate,
     required this.driver,
     required this.numberOfSeatsLeft,
@@ -25,6 +27,7 @@ class Trip {
   factory Trip.fromJson(json) {
     return Trip(
       // route: Route.fromJson(json['route']),
+      tripKey: json['tripKey'],
       gate: json['gate'],
       driver: json['driver'],
       numberOfSeatsLeft: json['numberOfSeatsLeft'],
@@ -40,6 +43,7 @@ class Trip {
   Map<String, dynamic> toJson() {
     return {
       // 'route': route,
+      'tripKey': tripKey,
       'gate': gate,
       'driver': driver,
       'numberOfSeatsLeft': numberOfSeatsLeft,
@@ -56,6 +60,7 @@ class Trip {
 class HomeTrip extends Trip {
   HomeTrip({
   //  required route,
+    required tripKey,
     required gate,
     required driver,
     required numberOfSeatsLeft,
@@ -63,7 +68,9 @@ class HomeTrip extends Trip {
     required status,
     required date,
   }) : super(
+
         //  route: route,
+        tripKey: tripKey,
           gate: gate,
           driver: driver,
           numberOfSeatsLeft: numberOfSeatsLeft,
@@ -76,6 +83,7 @@ class HomeTrip extends Trip {
 class CampusTrip extends Trip {
   CampusTrip({
  //   required route,
+ required tripKey,
     required gate,
     required driver,
     required numberOfSeatsLeft,
@@ -84,6 +92,7 @@ class CampusTrip extends Trip {
     required date,
   }) : super(
     //      route: route,
+          tripKey: tripKey,
           gate: gate,
           driver: driver,
           numberOfSeatsLeft: numberOfSeatsLeft,
@@ -95,74 +104,31 @@ class CampusTrip extends Trip {
 
 
 
-class TripRequest {
-  Trip trip;
-  String rider;
-  String status;
+// class TripRequest {
+//   Trip trip;
+//   String rider;
+//   String status;
 
-  TripRequest({
-    required this.trip,
-    required this.rider,
-    required this.status,
-  });
+//   TripRequest({
+//     required this.trip,
+//     required this.rider,
+//     required this.status,
+//   });
 
-  factory TripRequest.fromJson(Map<String, dynamic> json) {
-    return TripRequest(
-      trip: Trip.fromJson(json['trip']),
-      rider: json['rider'],
-      status: json['status'],
-    );
-  }
+//   factory TripRequest.fromJson(Map<String, dynamic> json) {
+//     return TripRequest(
+//       trip: Trip.fromJson(json['trip']),
+//       rider: json['rider'],
+//       status: json['status'],
+//     );
+//   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'trip': trip,
-      'rider': rider,
-      'status': status,
-    };
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'trip': trip,
+//       'rider': rider,
+//       'status': status,
+//     };
+//   }
+// }
 
-HomeTrip maadiHomeTrip1 = HomeTrip(
- //   route: maadiRoute,
-    gate: 3,
-    driver: 'Ahmed',
-    numberOfSeatsLeft: 3,
-    price: 30,
-    status: 'available',
-    date: DateTime.now());
-HomeTrip maadiHomeTrip2 = HomeTrip(
-   // route: maadiRoute,
-    gate: 3,
-    driver: 'Ahmed',
-    numberOfSeatsLeft: 3,
-    price: 30,
-    status: 'available',
-    date: DateTime.now());
-
-CampusTrip maadiCampusTrip1 = CampusTrip(
-   // route: maadiRoute,
-    gate: 3,
-    driver: 'Ahmed',
-    numberOfSeatsLeft: 3,
-    price: 30,
-    status: 'available',
-    date: DateTime.now());
-
-CampusTrip helioplisCampusTrip1 = CampusTrip(
- //   route: helioplisRoute,
-    gate: 3,
-    driver: 'Omar',
-    numberOfSeatsLeft: 3,
-    price: 30,
-    status: 'available',
-    date: DateTime.now());
-
-List<List<Trip>> maadiTrips =[
-  [maadiHomeTrip1, maadiHomeTrip2],
-  [maadiCampusTrip1],
-];
-
-List<List<Trip>> helioplisTrips =[
-  [helioplisCampusTrip1],
-];

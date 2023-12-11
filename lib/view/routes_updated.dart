@@ -5,20 +5,16 @@ import 'package:carpool/view/trips.dart';
 import 'package:flutter/material.dart';
 import '../classes_updated/routes_class.dart' as R;
 
-
 import '../reusable_widget.dart';
 
 class RoutesUpdated extends StatefulWidget {
   const RoutesUpdated({super.key});
-    
+
   @override
   State<RoutesUpdated> createState() => _RoutesUpdatedState();
 }
 
-class _RoutesUpdatedState extends State<RoutesUpdated>
-    {
- 
-
+class _RoutesUpdatedState extends State<RoutesUpdated> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,26 +24,23 @@ class _RoutesUpdatedState extends State<RoutesUpdated>
     );
   }
 
-  Widget _buildRoutesListFromDb(){
-    
+  Widget _buildRoutesListFromDb() {
     return FutureBuilder<List<R.Route>>(
-      future: DatabaseHelper.instance.getRoutesFromDb() ,
+      future: DatabaseHelper.instance.getRoutesFromDb(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState==ConnectionState.waiting){
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
-        }
-        else if (snapshot.hasData) {
-
-          List <R.Route> routes = snapshot.data!;
+        } else if (snapshot.hasData) {
+          List<R.Route> routes = snapshot.data!;
 
           print(routes.length);
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: _buildRoutesList(routes),
-        );
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: _buildRoutesList(routes),
+          );
         } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
+          return Text(" ${snapshot.error}");
         }
         return Text("No data");
       },
@@ -96,22 +89,25 @@ class _RoutesUpdatedState extends State<RoutesUpdated>
           Icons.arrow_forward,
           color: Color.fromARGB(255, 142, 15, 6),
         ),
-        onTap: () async{
-         final trips = await DatabaseHelper.instance.getTripsFromDb(route.location);
-         if(!context.mounted) return;
-         Navigator.push(
+        onTap: () async {
+          final trips =
+              await DatabaseHelper.instance.getTripsFromDb(route.location);
+
+              print('Trips tessssssssssst $trips');
+          if (!context.mounted) return;
+          Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TripPage( trips: trips, location: route.location),
+              builder: (context) =>
+                  TripPage(trips: trips, location: route.location),
             ),
-         );
-
-                  },
+          );
+        },
       ),
     );
   }
 
-   bool isBefore1PM() {
+  bool isBefore1PM() {
     DateTime now = DateTime.now();
     DateTime onePM = DateTime(now.year, now.month, now.day, 13, 0, 0);
 

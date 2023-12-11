@@ -1,6 +1,7 @@
 import 'package:carpool/view/routes_updated.dart';
 import 'package:flutter/material.dart';
 
+import '../firebase/authentication.dart';
 import 'cart.dart';
 import 'profile.dart';
 import 'deprecated_views/routes.dart'; // Import your Profile page
@@ -18,7 +19,7 @@ class _BottomNavPageState extends State<BottomNavPage> {
   final List<Widget> _pages = [
     const RoutesUpdated(),
     const CartPage(),
-    ProfilePage(),
+    ProfilePage(isOnline: Authentication.instance.isOnline,),
   ];
 
   @override

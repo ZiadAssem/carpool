@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:carpool/classes_updated/routes_class.dart';
+import 'package:carpool/classes_updated/triprequest_class.dart';
 import 'package:carpool/firebase/authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../classes_updated/user_class.dart';
@@ -129,20 +130,63 @@ class DatabaseHelper {
 
   addUserToDb(Map<String, dynamic> data) async {
     await reference.child('Users/').set(data);
-
   }
 
-  getCurrentUser() async{
-    
-    final event = await reference.child('Users/${Authentication.instance.currentUserId}').once();
+  getCurrentUser() async {
+    final event = await reference
+        .child('Users/${Authentication.instance.currentUserId}')
+        .once();
     Map<dynamic, dynamic> values =
         event.snapshot.value as Map<dynamic, dynamic>;
     currentUser = User.fromJson(values);
     print(currentUser);
   }
 
+  requestTrip(String userId, Map<String, dynamic> data) async {
+    await reference.child('/TripRequests/$userId').push().set(data);
+  }
+
+  getTripRequests(String userId) async {
+        List<TripRequest> tripRequests = [];
+
+    final event = await reference
+        .child('TripRequests/$userId')
+        .orderByChild('status')
+        .equalTo('pending')
+        .once();
+        //check if event has data
+        if(event.snapshot.value == null){
+          return tripRequests;
+        }
+    Map<dynamic, dynamic> values =
+        event.snapshot.value as Map<dynamic, dynamic>;
+    print(values);
+    values.forEach((key, value) {
+      tripRequests.add(TripRequest.fromJson(value));
+    });
+    print('testingggggg $tripRequests');
+    print(tripRequests.length);
+    return tripRequests;
+  }
   // getUserId(email){
   //   Authentication.currentUserId = email.replaceAll("@eng.asu.edu.eg", "");
   // }
 
+  getPreviousTrips(String userId) async {
+    final event = await reference
+        .child('TripRequests/$userId')
+        .orderByChild('status')
+        .equalTo('completed')
+        .once();
+
+    Map<dynamic, dynamic> values =
+        event.snapshot.value as Map<dynamic, dynamic>;
+    print(values);
+
+    List<TripRequest> tripRequests = [];
+    values.forEach((key, value) {
+      tripRequests.add(TripRequest.fromJson(value));
+    });
+    return tripRequests;
+  }
 }

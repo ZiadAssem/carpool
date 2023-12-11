@@ -211,8 +211,17 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
   _validateSignIn() async {
     if (signInFormKey.currentState!.validate()) {
       try {
-        SignInController.signInUser(context, signInEmailController.text.trim().toLowerCase(),
+        final error = SignInController.signInUser(
+            context,
+            signInEmailController.text.trim().toLowerCase(),
             signInPasswordController.text);
+        // if (error != null) {
+        //   showDialog(
+        //       context: context,
+        //       builder: (context) {
+        //         return _networkErrorDialog(context);
+        //       });
+        // }
       } on Exception catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -241,6 +250,30 @@ class _SignInScreenState extends State<SignInScreen> with ValidationMixin {
                 .toString())));
       }
     }
+  }
+
+  Widget _networkErrorDialog(context) {
+    return AlertDialog(
+      title: Text('See Local Info?'),
+      content:
+          Text('Do you want to see the local info of the last signed-in user?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dialog
+          },
+          child: Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dialog
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => BottomNavPage()));
+          },
+          child: Text('Yes'),
+        ),
+      ],
+    );
   }
 }
 

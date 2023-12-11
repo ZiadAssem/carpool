@@ -1,44 +1,11 @@
 import 'package:carpool/classes/ride.dart';
+import 'package:carpool/classes_updated/triprequest_class.dart';
+import 'package:carpool/firebase/authentication.dart';
+import 'package:carpool/firebase/database.dart';
 import 'package:carpool/reusable_widget.dart';
 import 'package:flutter/material.dart';
 
-CampusRide ride1 = CampusRide(
-  id: '1',
-  source: 'MAADI',
-  rider: 'Ahmed',
-  numberOfSeats: 4,
-      price: 30,
 
-  status: 'COMPLETE',
-);
-CampusRide ride2 = CampusRide(
-  id: '2',
-  source: 'NEWCAIRO',
-  rider: 'Ahmed',
-  numberOfSeats: 2,
-      price: 30,
-
-  status: 'COMPLETE',
-);
-CampusRide ride3 = CampusRide(
-  id: '3',
-  source: 'HELIOPLIS',
-  rider: 'Ahmed',
-  numberOfSeats: 3,
-      price: 30,
-
-  status: 'COMPLETE',
-);
-CampusRide ride4 = CampusRide(
-  id: '4',
-  source: 'DOWNTOWN',
-  rider: 'Ahmed',
-  numberOfSeats: 1,
-      price: 30,
-
-  status: 'COMPLETE',
-);
-List<Ride> previousRides = [ride1, ride2, ride3, ride4];
 
 class TripsHistory extends StatelessWidget {
   const TripsHistory({Key? key});
@@ -47,18 +14,45 @@ class TripsHistory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: reusableAppBar('History', null),
-      body: ListView.builder(
-        itemCount: previousRides.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: _buildStatusIcon(previousRides[index].status),
-            title: Text('Trip ${index + 1}'),
-            subtitle: Text(previousRides[index].source),
-            onTap: () {
-            },
-          );
-        },
-      ),
+      body: _getPreviousTrips(),
+    );
+  }
+
+  Widget _getPreviousTrips() {
+    return FutureBuilder(
+        future: DatabaseHelper.instance
+            .getPreviousTrips(Authentication.instance.currentUserId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData) {
+            final trips = snapshot.data as List<TripRequest>;
+            return _buildRequestList(trips);
+          } else if (snapshot.hasError) {
+            return Text("NO DATA");
+          }
+          return Text("No data");
+        });
+  }
+
+  Widget _buildRequestList(trips) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: trips.length,
+      itemBuilder: (context, index) {
+        return _buildRideDetails(trips, index);
+      },
+    );
+    ;
+  }
+
+  Widget _buildRideDetails(trips, index) {
+    return ListTile(
+      leading: _buildStatusIcon(trips[index].status),
+      title: Text('Trip ${index + 1}'),
+      subtitle: Text(trips[index].pickup + ' to ' + trips[index].destination),
+      onTap: () {},
     );
   }
 
@@ -68,7 +62,7 @@ class TripsHistory extends StatelessWidget {
     Color iconColor;
 
     switch (status) {
-      case 'COMPLETE':
+      case 'completed':
         iconData = Icons.check_circle;
         iconColor = Colors.green;
         break;

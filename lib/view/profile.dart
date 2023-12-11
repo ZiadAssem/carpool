@@ -1,20 +1,23 @@
 import 'package:carpool/classes_updated/user_class.dart';
 import 'package:carpool/firebase/authentication.dart';
+import 'package:carpool/local_database/local_database.dart';
 import 'package:carpool/reusable_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:carpool/firebase/database.dart';
-class ProfilePage extends StatefulWidget {
 
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({Key? key, required this.isOnline}) : super(key: key);
+  final isOnline;
   // final _currentUser = await DatabaseHelper.instance.getCurrentUser();
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-   final _currentUser = DatabaseHelper.instance.currentUser;
+  final _currentUser = DatabaseHelper.instance.currentUser;
   @override
-  Widget build(BuildContext context)  {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: reusableAppBar('Profile', null),
       backgroundColor: Colors.transparent,
@@ -29,9 +32,11 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 16),
               _buildDetailsCard(),
               const SizedBox(height: 16),
-              _buildButton('Sign Out',()=> Authentication.instance.signOutUser(context)),
+              _buildButton('Sign Out',
+                  () => Authentication.instance.signOutUser(context)),
               const SizedBox(height: 8),
-              _buildButton('Delete Account', ()=>Authentication.instance.deleteAccount(context)),
+              _buildButton('Delete Account',
+                  () => Authentication.instance.deleteAccount(context)),
             ],
           ),
         ),
@@ -55,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Card(
       color: Colors.white.withOpacity(0.9),
       elevation: 8,
-      child:  Padding(
+      child: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +70,9 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(height: 16),
             ListTile(title: Text('Name: ${_currentUser.name}')),
             ListTile(title: Text('Email: ${_currentUser.email}')),
-            ListTile(title: Text('Phone Number: ${_currentUser.phoneNumber}'),)
+            ListTile(
+              title: Text('Phone Number: ${_currentUser.phoneNumber}'),
+            )
             // Add more user details as needed
           ],
         ),
@@ -82,5 +89,14 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  
+  // _getCurrentUser() async {
+  //   if (widget.isOnline) {
+  //     final currentUser = await DatabaseHelper.instance.getCurrentUser();
+  //     return currentUser;
+  //   } else {
+  //     final db = LocalDatabaseHelper();
+  //     final currentUser = await db.getCurrentUser();
+  //     return currentUser;
+  //   }
+  // }
 }
