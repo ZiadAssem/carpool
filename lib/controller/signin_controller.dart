@@ -15,7 +15,6 @@ class SignInController {
         .signInWithEmailAndPassword(email, password);
 
     if (error == null) {
-
       //  final db = LocalDatabaseHelper();
       final user = {
         'email': email,
@@ -24,14 +23,14 @@ class SignInController {
       };
 
       Authentication.instance.isOnline = true;
-       
+
       await DatabaseHelper.instance.getCurrentUser();
 
       // Navigate to the home page on success
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("SUCCESSFUL")));
       // Authentication.instance.getCurrentUser(context);
-      
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => BottomNavPage()),
@@ -40,14 +39,14 @@ class SignInController {
       // final db = LocalDatabaseHelper();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Network Error, please try again later")));
-          //Test Case begin
-          // final u = await db.getCurrentUser();
-          // print(u);
+      //Test Case begin
+      // final u = await db.getCurrentUser();
+      // print(u);
 
-          //Test Case end
-          // if(await db.checkUser(email)){
-          //         return 'User Found';
-          // }
+      //Test Case end
+      // if(await db.checkUser(email)){
+      //         return 'User Found';
+      // }
     } else {
       print(error);
       ScaffoldMessenger.of(context).showSnackBar(

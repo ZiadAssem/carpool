@@ -24,8 +24,10 @@ class CartPage extends StatelessWidget {
               _buildTripList(),
               const SizedBox(height: 16),
               _buildButton('Trips History', () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const TripsHistory()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const TripsHistory()));
               }),
               //  _buildPreviousTripsList(),
             ],
@@ -48,13 +50,13 @@ class CartPage extends StatelessWidget {
             List<TripRequest> tripRequests = snapshot.data as List<TripRequest>;
             print('test snapshot ${tripRequests.length}');
 
-            if(tripRequests.isEmpty){
-                return const Text(
-                    "No trips in your cart",
-                    style: TextStyle(fontSize: 40),
-                  );
-            }                return _buildRequestList(tripRequests);
-
+            if (tripRequests.isEmpty) {
+              return const Text(
+                "No trips in your cart",
+                style: TextStyle(fontSize: 40),
+              );
+            }
+            return _buildRequestList(tripRequests);
           } else if (snapshot.hasError) {
             return const Text(
               "Error",
@@ -82,8 +84,8 @@ class CartPage extends StatelessWidget {
 
   Widget _buildRideDetails(_tripRequests, index) {
     bool _toHome = false;
-    if (_tripRequests[index].pickup == '3' ||
-        _tripRequests[index].pickup == '4') {
+    if (_tripRequests[index].pickup == 'Gate 3' ||
+        _tripRequests[index].pickup == 'Gate 4') {
       _toHome = true;
     }
     return Card(

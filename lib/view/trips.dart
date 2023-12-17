@@ -92,7 +92,7 @@ class _TripPageState extends State<TripPage> with TickerProviderStateMixin {
               color: reusableColor()), // Adjust text color
         ),
         subtitle: Text(
-          'Driver: ${rides[index].driver}',
+          'Driver: ${rides[index].driverId}',
           style:  TextStyle(
               color: reusableColor()), // Adjust text color
         ),

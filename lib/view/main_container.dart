@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import '../firebase/authentication.dart';
 import 'cart.dart';
 import 'profile.dart';
+import '../controller/signin_controller.dart';
 import 'deprecated_views/routes.dart'; // Import your Profile page
 
 class BottomNavPage extends StatefulWidget {
+  
+
   @override
   _BottomNavPageState createState() => _BottomNavPageState();
 }
@@ -24,6 +27,7 @@ class _BottomNavPageState extends State<BottomNavPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Stack(
       children: [
         _buildMainBackground(),

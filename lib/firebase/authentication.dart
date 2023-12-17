@@ -34,9 +34,10 @@ class Authentication {
           email: emailAddress, password: password);
       U.User user =
           U.User(name: fullName, email: emailAddress, phoneNumber: phoneNumber);
+                currentUserId = emailAddress.replaceAll("@eng.asu.edu.eg", "");
 
-      DatabaseHelper.instance.addUserToDb(user.toJson());
-      currentUserId = emailAddress.replaceAll("@eng.asu.edu.eg", "");
+
+      DatabaseHelper.instance.addUserToDb(user.toJson(), currentUserId);
 
       return null; // Return null for success
     } on FirebaseAuthException catch (e) {

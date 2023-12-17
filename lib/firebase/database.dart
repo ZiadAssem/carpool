@@ -128,8 +128,8 @@ class DatabaseHelper {
     return trips;
   }
 
-  addUserToDb(Map<String, dynamic> data) async {
-    await reference.child('Users/').set(data);
+  addUserToDb(Map<String, dynamic> data ,String currentUserId) async {
+    await reference.child('Users/').update(data);
   }
 
   getCurrentUser() async {
@@ -143,7 +143,14 @@ class DatabaseHelper {
   }
 
   requestTrip(String userId, Map<String, dynamic> data) async {
-    await reference.child('/TripRequests/$userId').push().set(data);
+    final driverId = data['driver'];
+    //generate key
+    final generatedKey = reference.child('/TripRequests/$userId').push().key;
+    data['requestId'] = generatedKey;
+    await reference.child('/TripRequests/$userId').child(generatedKey!).set(TripRequest.fromJson(data).toJson());
+    await reference
+       .child('Users').child('testdriver').child('TripRequests').child(generatedKey).set(data);
+
   }
 
   getTripRequests(String userId) async {

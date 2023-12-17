@@ -8,9 +8,7 @@ import '../classes_updated/trip_class.dart';
 import '../firebase/database.dart';
 
 class TripDetails extends StatefulWidget {
-  
-
-   TripDetails(
+  TripDetails(
       {super.key,
       required this.trip,
       required this.location,
@@ -60,9 +58,8 @@ class _TripDetailsState extends State<TripDetails> {
             _buildtripDestination(),
             const SizedBox(height: 8),
             _buildDetailRow('tripKey', widget.trip.tripKey),
-            _buildDetailRow('Rider:', widget.trip.driver),
-            _buildDetailRow(
-                'Time:', widget.isHomeRide ? 'Evening' : 'Morning'),
+            _buildDetailRow('Rider:', widget.trip.driverId),
+            _buildDetailRow('Time:', widget.isHomeRide ? 'Evening' : 'Morning'),
             _buildDetailRow(
                 'Available Seats:', widget.trip.numberOfSeatsLeft.toString()),
           ],
@@ -131,22 +128,25 @@ class _TripDetailsState extends State<TripDetails> {
 
   void _handleSelectedOption(selectedOption) {
     if (selectedOption == 'Confirm') {
-        if(widget.isHomeRide){
-     widget.destination = widget.location;
-     widget.pickup = widget.trip.gate;
-  }else{
-    widget.destination = widget.trip.gate;
-    widget.pickup = widget.location;
-  }
+      if (widget.isHomeRide) {
+        widget.destination = widget.location;
+        widget.pickup = widget.trip.gate;
+      } else {
+        widget.destination = widget.trip.gate;
+        widget.pickup = widget.location;
+      }
       // Perform action for confirm
-      TripRequest data = TripRequest(
-      tripId: widget.trip.tripKey, 
-      driver: widget.trip.driver, 
-      user:Authentication.instance.currentUserId , 
-      status: widget.trip.status, 
-      pickup: widget.pickup, 
-      destination: widget.destination);
-      DatabaseHelper.instance.requestTrip(Authentication.instance.currentUserId, data.toJson());
+      Map<String, dynamic> data = {
+        'tripId': widget.trip.tripKey,
+        'driver': widget.trip.driverId,
+        'user': Authentication.instance.currentUserId,
+        'status': 'pending',
+        'pickup': widget.pickup,
+        'destination': widget.destination
+      };
+
+      DatabaseHelper.instance
+          .requestTrip(Authentication.instance.currentUserId, data);
 
       //show snackbar
       ScaffoldMessenger.of(context).showSnackBar(

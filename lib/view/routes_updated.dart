@@ -1,5 +1,3 @@
-import 'package:carpool/classes/ride.dart';
-import 'package:carpool/classes_updated/routes_class.dart';
 import 'package:carpool/firebase/database.dart';
 import 'package:carpool/view/trips.dart';
 import 'package:flutter/material.dart';
