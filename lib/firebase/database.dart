@@ -50,74 +50,55 @@ class DatabaseHelper {
     return await reference.child(path).once();
   }
 
-  Future<List<Route>> getRoutesFromDb() async {
-    print("test         1");
-    final event = await reference.child('Routes').once()
-        // .timeout(
-        //       const Duration(seconds: 60),
-        //       onTimeout: () => throw TimeoutException("Time out"),
-        //     )
-        ;
-    print("test         2");
+  //updated
+  Future<List> getRoutesFromDb() async {
+    final event = await reference.child('Routes').once();
 
     Map<dynamic, dynamic> values =
         event.snapshot.value as Map<dynamic, dynamic>;
 
-    List<Route> routes = [];
+    List routes = [];
     values.forEach((key, value) {
-      routes.add(Route(location: value['location']));
+      routes.add(value['location']);
     });
     routes.toSet().toList();
     return routes;
   }
 
-  Future<List<List<Trip>>> getTripsFromDb(String path) async {
-    path = '${path.replaceAll(" ", "")}Route';
-    path = "Routes/$path";
-    print('path: $path');
-
+  //updated
+  Future<List<List<Trip>>> getTripsFromDb(String route) async {
     List<List<Trip>> trips = [];
     List<Trip> campusTripsDb = [];
     List<Trip> homeTripsDb = [];
+    Map<dynamic, dynamic>? campusValues;
+    Map<dynamic, dynamic>? homeValues;
+    print('route: $route');
 
     try {
-      final event = await reference.child(path).once().timeout(
-            const Duration(seconds: 10),
-            onTimeout: () => throw TimeoutException("Time out"),
-          );
+      final campusEvent =
+          await reference.child('Trips').child('Campus').child(route).once();
 
-      Map<dynamic, dynamic>? values =
-          event.snapshot.value as Map<dynamic, dynamic>?;
+      final homeEvent =
+          await reference.child('Trips').child('Home').child(route).once();
 
-      print("values: $values");
-
-      if (values != null) {
-        if (values.containsKey('CampusTrips') &&
-            values['CampusTrips'] is Map<dynamic, dynamic>) {
-          (values['CampusTrips'] as Map<dynamic, dynamic>)
-              .forEach((key, value) {
-            // if (value is Map<String, dynamic>) {
-            print('key is $key');
-            print('value is $value');
-            campusTripsDb.add(Trip.fromJson(value));
-            // } else {
-            // print("Invalid data structure for CampusTrips: $value");
-            // }
-          });
-        }
-
-        if (values.containsKey('HomeTrips') &&
-            values['HomeTrips'] is Map<dynamic, dynamic>) {
-          (values['HomeTrips'] as Map<dynamic, dynamic>).forEach((key, value) {
-            if (value is Map<String, dynamic>) {
-              homeTripsDb.add(Trip.fromJson(value));
-            } else {
-              print("Invalid data structure for HomeTrips: $value");
-            }
-          });
-        }
+      if (campusEvent.snapshot.value != null) {
+        campusValues = campusEvent.snapshot.value as Map<dynamic, dynamic>?;
       }
-
+      if (homeEvent.snapshot.value != null) {
+        homeValues = homeEvent.snapshot.value as Map<dynamic, dynamic>?;
+      }
+      print('test 2');
+      if (campusValues != null) {
+        campusValues.forEach((key, value) {
+          campusTripsDb.add(Trip.fromJson(value));
+        });
+      }
+      print('test 3');
+      if (homeValues != null) {
+        homeValues.forEach((key, value) {
+          homeTripsDb.add(Trip.fromJson(value));
+        });
+      }
       trips = [campusTripsDb, homeTripsDb];
       print('trips: $trips');
     } catch (error) {
@@ -128,8 +109,9 @@ class DatabaseHelper {
     return trips;
   }
 
-  addUserToDb(Map<String, dynamic> data ,String currentUserId) async {
-    await reference.child('Users/').update(data);
+  //updated
+  addUserToDb(Map<String, dynamic> data, String currentUserId) async {
+    await reference.child('Users/').set(data);
   }
 
   getCurrentUser() async {
@@ -141,36 +123,46 @@ class DatabaseHelper {
     currentUser = User.fromJson(values);
     print(currentUser);
   }
+  //updated
 
   requestTrip(String userId, Map<String, dynamic> data) async {
     final driverId = data['driver'];
     //generate key
-    final generatedKey = reference.child('/TripRequests/$userId').push().key;
+    final generatedKey = reference.child('TripRequests/$userId').push().key;
     data['requestId'] = generatedKey;
-    await reference.child('/TripRequests/$userId').child(generatedKey!).set(TripRequest.fromJson(data).toJson());
     await reference
-       .child('Users').child('testdriver').child('TripRequests').child(generatedKey).set(data);
-
+        .child('/TripRequests/$userId')
+        .child(generatedKey!)
+        .set(data);
+    await reference
+        .child('Users')
+        .child(driverId)
+        .child('TripRequests')
+        .child(generatedKey)
+        .set(data);
   }
 
-  getTripRequests(String userId) async {
-        List<TripRequest> tripRequests = [];
+  getAcceptedTripData(String userId) async {
+    List<TripRequest> tripRequests = [];
 
     final event = await reference
         .child('TripRequests/$userId')
         .orderByChild('status')
-        .equalTo('pending')
+        .equalTo('accepted')
         .once();
-        //check if event has data
-        if(event.snapshot.value == null){
-          return tripRequests;
-        }
+    //check if event has data
+    if (event.snapshot.value == null) {
+      return tripRequests;
+    }
     Map<dynamic, dynamic> values =
         event.snapshot.value as Map<dynamic, dynamic>;
+
     print(values);
+
     values.forEach((key, value) {
       tripRequests.add(TripRequest.fromJson(value));
     });
+
     print('testingggggg $tripRequests');
     print(tripRequests.length);
     return tripRequests;
@@ -179,7 +171,7 @@ class DatabaseHelper {
   //   Authentication.currentUserId = email.replaceAll("@eng.asu.edu.eg", "");
   // }
 
-  getPreviousTrips(String userId) async {
+  getCompletedTrips(String userId) async {
     final event = await reference
         .child('TripRequests/$userId')
         .orderByChild('status')
@@ -196,4 +188,6 @@ class DatabaseHelper {
     });
     return tripRequests;
   }
+
+  
 }

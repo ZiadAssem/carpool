@@ -4,6 +4,7 @@
 import 'package:carpool/firebase_options.dart';
 import 'package:carpool/view/main_container.dart';
 import 'package:carpool/view/routes_updated.dart';
+import 'package:carpool/view/trips_history.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 

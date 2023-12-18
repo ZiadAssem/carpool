@@ -21,7 +21,7 @@ class TripsHistory extends StatelessWidget {
   Widget _getPreviousTrips() {
     return FutureBuilder(
         future: DatabaseHelper.instance
-            .getPreviousTrips(Authentication.instance.currentUserId),
+            .getCompletedTrips(Authentication.instance.currentUserId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

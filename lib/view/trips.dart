@@ -154,7 +154,7 @@ class _TripPageState extends State<TripPage> with TickerProviderStateMixin {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Seats Left: ${rides[index].numberOfSeats}",
+          "Seats Left: ${rides[index].numberOfSeatsLeft}",
           style: const TextStyle(color: Colors.black), // Adjust text color
         ),
         const SizedBox(height: 4),

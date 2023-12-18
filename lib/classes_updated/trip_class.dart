@@ -1,6 +1,6 @@
 class Trip {
   // Route route;
-  String tripKey;
+  String tripId;
   String gate;
   int price;
   String driverId;
@@ -9,25 +9,68 @@ class Trip {
   String date;
   String route;
   String destination;
+  bool isMorningTrip;
 
-  Trip(
-      {
-      // required this.route,
-      required this.tripKey,
-      required this.gate,
-      required this.driverId,
-      required this.numberOfSeatsLeft,
-      required this.price,
-      required this.status,
-      required this.date,
-      required this.route,
-      required this.destination}
-      );
+  Trip({
+    required this.tripId,
+    required this.gate,
+    required this.driverId,
+    required this.numberOfSeatsLeft,
+    required this.price,
+    required this.status,
+    required this.date,
+    required this.route,
+    required this.destination,
+    required this.isMorningTrip,
+    
+    
+  });
 
   factory Trip.fromJson(json) {
+     if (json == null) {
+      // Handle the case where the JSON data is null
+      // You can return a default instance or throw an exception, depending on your use case
+      throw FormatException("JSON data is null");
+    }
+
+    // Ensure that the required fields are present in the JSON
+
+    // if (json['tripId']==null) {
+    //   throw FormatException("Required field tripId is missing");
+    // }
+    // if (json['gate']==null) {
+    //   throw FormatException("Required field gate is missing");
+    // }
+    // if (json['driverId']==null) {
+    //   throw FormatException("Required field driverId is missing");
+    // }
+    // if (json['numberOfSeatsLeft']==null) {
+    //   throw FormatException("Required field numberOfSeatsLeft is missing");
+    // }
+    // if (json['price']==null) {
+    //   throw FormatException("Required field price is missing");
+    // }
+    // if (json['status']==null) {
+    //   throw FormatException("Required field status is missing");
+    // }
+    // if (json['date']==null) {
+    //   throw FormatException("Required field date is missing");
+    // }
+    // if (json['route']==null) {
+    //   throw FormatException("Required field route is missing");
+    // }
+    // if (json['destination']==null) {
+    //   throw FormatException("Required field destination is missing");
+    // }
+    // if (json['isMorningTrip']==null) {
+    //   throw FormatException("Required field isMorningTrip is missing");
+    // }
+
+
+
     return Trip(
         // route: Route.fromJson(json['route']),
-        tripKey: json['tripKey'],
+        tripId: json['tripId'],
         gate: json['gate'],
         driverId: json['driverId'],
         numberOfSeatsLeft: json['numberOfSeatsLeft'],
@@ -35,13 +78,15 @@ class Trip {
         status: json['status'],
         date: json['date'],
         route: json['route'],
-        destination: json['destination']);
+        destination: json['destination'],
+        isMorningTrip: json['isMorningTrip']
+        );
   }
 
   Map<String, dynamic> toJson() {
     return {
       // 'route': route,
-      'tripKey': tripKey,
+      'tripId': tripId,
       'gate': gate,
       'driverId': driverId,
       'numberOfSeatsLeft': numberOfSeatsLeft,
@@ -49,7 +94,8 @@ class Trip {
       'status': status,
       'date': date,
       'route': route,
-      'destination': destination
+      'destination': destination,
+      'isMorningTrip': isMorningTrip
 
       // Convert date to ISO 8601 string
     };

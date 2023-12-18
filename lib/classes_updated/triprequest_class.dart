@@ -6,6 +6,8 @@ class TripRequest{
   String status;
   String pickup;
   String destination;
+  String tripDate;
+  bool isMorningTrip;
 
   TripRequest({
 
@@ -16,6 +18,8 @@ class TripRequest{
     required this.status,
     required this.pickup,
     required this.destination,
+    required this.tripDate,
+    required this.isMorningTrip,
   });
 
   Map<String, dynamic> toJson() {
@@ -27,6 +31,9 @@ class TripRequest{
       'status': status,
       'pickup': pickup,
       'destination': destination,
+      'tripDate': tripDate,
+      'isMorningTrip': isMorningTrip,
+
     };
   }
 
@@ -39,6 +46,8 @@ class TripRequest{
       status: value['status'],
       pickup: value['pickup'],
       destination: value['destination'],
+      tripDate: value['tripDate'],
+      isMorningTrip: value['isMorningTrip'],
     );
   }
 }

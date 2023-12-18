@@ -57,7 +57,7 @@ class _TripDetailsState extends State<TripDetails> {
           children: [
             _buildtripDestination(),
             const SizedBox(height: 8),
-            _buildDetailRow('tripKey', widget.trip.tripKey),
+            _buildDetailRow('tripKey', widget.trip.tripId),
             _buildDetailRow('Rider:', widget.trip.driverId),
             _buildDetailRow('Time:', widget.isHomeRide ? 'Evening' : 'Morning'),
             _buildDetailRow(
@@ -135,18 +135,38 @@ class _TripDetailsState extends State<TripDetails> {
         widget.destination = widget.trip.gate;
         widget.pickup = widget.location;
       }
+      DateTime tripDate =DateTime.parse( widget.trip.date);
+      DateTime fiveThirtyPM = DateTime(
+          tripDate.year,
+          tripDate.month,
+          tripDate.day,
+          17,
+          30,
+          0);
+          
+      DateTime sevenThirtyAM = DateTime(
+          tripDate.year,
+          tripDate.month,
+          tripDate.day,
+          7,
+          30,
+          0);
       // Perform action for confirm
-      Map<String, dynamic> data = {
-        'tripId': widget.trip.tripKey,
+      Map<String,dynamic> request  = {
+        'tripId': widget.trip.tripId,
         'driver': widget.trip.driverId,
         'user': Authentication.instance.currentUserId,
-        'status': 'pending',
+        'status': 'awaiting',
         'pickup': widget.pickup,
-        'destination': widget.destination
+        'destination': widget.destination,
+        'tripDate': widget.trip.date,
+        'isMorningTrip': widget.trip.isMorningTrip ,
+
+        
       };
 
       DatabaseHelper.instance
-          .requestTrip(Authentication.instance.currentUserId, data);
+          .requestTrip(Authentication.instance.currentUserId, request);
 
       //show snackbar
       ScaffoldMessenger.of(context).showSnackBar(

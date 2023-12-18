@@ -23,13 +23,13 @@ class _RoutesUpdatedState extends State<RoutesUpdated> {
   }
 
   Widget _buildRoutesListFromDb() {
-    return FutureBuilder<List<R.Route>>(
+    return FutureBuilder<List>(
       future: DatabaseHelper.instance.getRoutesFromDb(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
-          List<R.Route> routes = snapshot.data!;
+          List routes = snapshot.data!;
 
           print(routes.length);
 
@@ -69,7 +69,7 @@ class _RoutesUpdatedState extends State<RoutesUpdated> {
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         title: Text(
-          route.location,
+          route,
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -89,7 +89,7 @@ class _RoutesUpdatedState extends State<RoutesUpdated> {
         ),
         onTap: () async {
           final trips =
-              await DatabaseHelper.instance.getTripsFromDb(route.location);
+              await DatabaseHelper.instance.getTripsFromDb(route);
 
               print('Trips tessssssssssst $trips');
           if (!context.mounted) return;
@@ -97,7 +97,7 @@ class _RoutesUpdatedState extends State<RoutesUpdated> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  TripPage(trips: trips, location: route.location),
+                  TripPage(trips: trips, location: route),
             ),
           );
         },

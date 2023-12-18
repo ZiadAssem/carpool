@@ -18,19 +18,21 @@ class CartPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
-          child: Column(
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-              _buildTripList(),
-              const SizedBox(height: 16),
-              _buildButton('Trips History', () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const TripsHistory()));
-              }),
-              //  _buildPreviousTripsList(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                _buildTripList(),
+                const SizedBox(height: 16),
+                _buildButton('Trips History', () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TripsHistory()));
+                }),
+                //  _buildPreviousTripsList(),
+              ],
+            ),
           ),
         ),
       ),
@@ -40,15 +42,12 @@ class CartPage extends StatelessWidget {
   Widget _buildTripList() {
     return FutureBuilder(
         future: DatabaseHelper.instance
-            .getTripRequests(Authentication.instance.currentUserId),
+            .getAcceptedTripData(Authentication.instance.currentUserId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasData) {
-            print('snapshot has dataaaaaaaaaaaaaa');
-            print('test snapshot ${snapshot.data}');
             List<TripRequest> tripRequests = snapshot.data as List<TripRequest>;
-            print('test snapshot ${tripRequests.length}');
 
             if (tripRequests.isEmpty) {
               return const Text(
