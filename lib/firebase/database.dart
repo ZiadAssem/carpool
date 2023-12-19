@@ -72,6 +72,15 @@ class DatabaseHelper {
     List<Trip> homeTripsDb = [];
     Map<dynamic, dynamic>? campusValues;
     Map<dynamic, dynamic>? homeValues;
+    DateTime now = DateTime.now();
+    DateTime onePM = DateTime(now.year, now.month, now.day, 13, 0, 0);
+    DateTime tenPM = DateTime(now.year, now.month, now.day, 22, 0, 0);
+    DateTime sevenThirtyAM = DateTime(now.year, now.month, now.day, 7, 30, 0);
+    DateTime fiveThirtyPM =      DateTime(now.year, now.month, now.day, 17, 30, 0);
+
+
+
+
     print('route: $route');
 
     try {
@@ -90,13 +99,25 @@ class DatabaseHelper {
       print('test 2');
       if (campusValues != null) {
         campusValues.forEach((key, value) {
-          campusTripsDb.add(Trip.fromJson(value));
+          final parsedDate = DateTime.parse(value['date']);
+          print(parsedDate);
+        
+          if (parsedDate.isAfter(now) && now.isBefore(onePM)) {
+            print('success');
+            campusTripsDb.add(Trip.fromJson(value));
+          }
         });
       }
       print('test 3');
       if (homeValues != null) {
         homeValues.forEach((key, value) {
-          homeTripsDb.add(Trip.fromJson(value));
+          final parsedDate = DateTime.parse(value['date']);
+          print(parsedDate);
+
+          if (parsedDate.isAfter(now) && now.isBefore(tenPM)) {
+            print('success');
+            homeTripsDb.add(Trip.fromJson(value));
+          }
         });
       }
       trips = [campusTripsDb, homeTripsDb];
@@ -128,10 +149,14 @@ class DatabaseHelper {
   requestTrip(String userId, Map<String, dynamic> data) async {
     final driverId = data['driver'];
     //generate key
-    final generatedKey = reference.child('TripRequests/$userId').push().key;
+    final generatedKey =
+        reference.child('TripRequests').child(data['tripId']).push().key;
     data['requestId'] = generatedKey;
+
+    //TripRequests/tripId/requestId/requestData
     await reference
-        .child('/TripRequests/$userId')
+        .child('/TripRequests')
+        .child(data['tripId'])
         .child(generatedKey!)
         .set(data);
     await reference
@@ -145,11 +170,7 @@ class DatabaseHelper {
   getAcceptedTripData(String userId) async {
     List<TripRequest> tripRequests = [];
 
-    final event = await reference
-        .child('TripRequests/$userId')
-        .orderByChild('status')
-        .equalTo('accepted')
-        .once();
+    final event = await reference.child('TripRequests').once();
     //check if event has data
     if (event.snapshot.value == null) {
       return tripRequests;
@@ -160,7 +181,8 @@ class DatabaseHelper {
     print(values);
 
     values.forEach((key, value) {
-      tripRequests.add(TripRequest.fromJson(value));
+      if (value['status'] == 'accepted' && value['user'] == userId)
+        tripRequests.add(TripRequest.fromJson(value));
     });
 
     print('testingggggg $tripRequests');
@@ -172,11 +194,7 @@ class DatabaseHelper {
   // }
 
   getCompletedTrips(String userId) async {
-    final event = await reference
-        .child('TripRequests/$userId')
-        .orderByChild('status')
-        .equalTo('completed')
-        .once();
+    final event = await reference.child('TripRequests').once();
 
     Map<dynamic, dynamic> values =
         event.snapshot.value as Map<dynamic, dynamic>;
@@ -184,10 +202,10 @@ class DatabaseHelper {
 
     List<TripRequest> tripRequests = [];
     values.forEach((key, value) {
-      tripRequests.add(TripRequest.fromJson(value));
+      if (value['status'] == 'completed' && value['user'] == userId) {
+        tripRequests.add(TripRequest.fromJson(value));
+      }
     });
     return tripRequests;
   }
-
-  
 }

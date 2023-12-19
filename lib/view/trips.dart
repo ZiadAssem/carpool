@@ -48,7 +48,7 @@ class _TripPageState extends State<TripPage> with TickerProviderStateMixin {
       indicatorColor: Colors.white,
       controller: _tabController,
       tabs: const <Widget>[
-        Tab(icon: Icon(Icons.directions_bus_rounded), text: "Campus Rides"),
+        Tab(icon: Icon(Icons.school), text: "Campus Rides"),
         Tab(icon: Icon(Icons.home_rounded), text: "Home Rides"),
       ],
     );
