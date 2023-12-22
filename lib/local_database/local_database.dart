@@ -1,73 +1,36 @@
-// import 'dart:async';
-// import 'package:path/path.dart';
-// import 'package:sqflite/sqflite.dart';
+//Local Database for storing user data
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
-// class LocalDatabaseHelper {
-//   static Database? _database;
-//   static const String _tableName = 'userTable';
+class LocalDatabase {
+  static final LocalDatabase instance = LocalDatabase._init();
 
-//   Future<Database> get database async {
-//     if (_database != null) return _database!;
+  static Database? _database;
 
-//     // If _database is null, instantiate it
-//     _database = await initDatabase();
-//     return _database!;
-//   }
+  LocalDatabase._init();
 
-//   Future<Database> initDatabase() async {
-//     String path = join(await getDatabasesPath(), 'user_database.db');
-//     return await openDatabase(path, version: 1, onCreate: _createTable);
-//   }
+  Future<Database> get database async {
+    if (_database != null) return _database!;
 
-//   Future<void> _createTable(Database db, int version) async {
-//     await db.execute('''
-//       CREATE TABLE $_tableName (
-//         email TEXT PRIMARY KEY,
-//         name TEXT,
-//         phoneNumber TEXT,
-//       )
-//     ''');
-//   }
+    _database = await _initDB('your_database.db');
+    return _database!;
+  }
 
-//   Future<int> insertUser(Map<String, dynamic> user) async {
-//     Database db = await database;
-//     return await db.insert(_tableName, user);
-//   }
+  Future<Database> _initDB(String filePath) async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, filePath);
 
-//   Future<List<Map<String, dynamic>>> getUsers() async {
-//     Database db = await database;
-//     return await db.query(_tableName);
-//   }
+    return await openDatabase(path, version: 1, onCreate: _createDB);
+  }
 
-//   //check if user exists
-//   Future<bool> checkUser(String email) async {
-//     Database db = await database;
-//     List<Map<String, dynamic>> users = await db.query(_tableName);
-//     for (var user in users) {
-//       if (user['email'] == email) {
-//         return true;
-//       }
-//     }
-//     return false;
-//   }
-
-//   //Function that gets the first user in the database
-//   Future<Map<String, dynamic>> getCurrentUser() async {
-//     Database db = await database;
-//     List<Map<String, dynamic>> users = await db.query(_tableName);
-//     if(users.isEmpty){
-//       return {'email':'empty','name':'empty','phoneNumber':'empty'};
-//     }
-//     return users[0];
-//   }
-
-//   //Function that checks that db is not empty
-
-
-//   //Function that deletes all user, then adds new user
-//   Future<void> updateUser(Map<String, dynamic> user) async {
-//     Database db = await database;
-//     await db.delete(_tableName);
-//     await db.insert(_tableName, user);
-//   }
-// }
+  Future<void> _createDB(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE profile (
+        id TEXT PRIMARY KEY,
+        name TEXT,
+        email TEXT,
+        phoneNumber TEXT
+      )
+    ''');
+  }
+}

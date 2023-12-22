@@ -28,4 +28,12 @@ class User{
     };
   }
 
+  Map<String,dynamic> toMap() {
+    return {
+      'name':name,
+      'email':email,
+      'phoneNumber':phoneNumber,
+    };
+  }
+
 }

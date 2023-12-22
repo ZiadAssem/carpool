@@ -73,13 +73,10 @@ class DatabaseHelper {
     Map<dynamic, dynamic>? campusValues;
     Map<dynamic, dynamic>? homeValues;
     DateTime now = DateTime.now();
-    DateTime onePM = DateTime(now.year, now.month, now.day, 13, 0, 0);
+    DateTime onePM = DateTime(now.year, now.month, now.day+1, 13, 0, 0);
     DateTime tenPM = DateTime(now.year, now.month, now.day, 22, 0, 0);
     DateTime sevenThirtyAM = DateTime(now.year, now.month, now.day, 7, 30, 0);
-    DateTime fiveThirtyPM =      DateTime(now.year, now.month, now.day, 17, 30, 0);
-
-
-
+    DateTime fiveThirtyPM = DateTime(now.year, now.month, now.day, 17, 30, 0);
 
     print('route: $route');
 
@@ -101,8 +98,8 @@ class DatabaseHelper {
         campusValues.forEach((key, value) {
           final parsedDate = DateTime.parse(value['date']);
           print(parsedDate);
-        
-          if (parsedDate.isAfter(now) && now.isBefore(onePM)) {
+
+          if (parsedDate.isAfter(now) && now.isBefore(tenPM)) {
             print('success');
             campusTripsDb.add(Trip.fromJson(value));
           }
@@ -114,7 +111,7 @@ class DatabaseHelper {
           final parsedDate = DateTime.parse(value['date']);
           print(parsedDate);
 
-          if (parsedDate.isAfter(now) && now.isBefore(tenPM)) {
+          if (parsedDate.isAfter(now) && now.isBefore(onePM)) {
             print('success');
             homeTripsDb.add(Trip.fromJson(value));
           }
@@ -142,7 +139,9 @@ class DatabaseHelper {
     Map<dynamic, dynamic> values =
         event.snapshot.value as Map<dynamic, dynamic>;
     currentUser = User.fromJson(values);
-    print(currentUser);
+        print('Current user is $currentUser');
+
+    return currentUser;
   }
   //updated
 
@@ -181,8 +180,17 @@ class DatabaseHelper {
     print(values);
 
     values.forEach((key, value) {
-      if (value['status'] == 'accepted' && value['user'] == userId)
-        tripRequests.add(TripRequest.fromJson(value));
+      print('key is $key');
+      print('value is $value');
+      value.forEach((requestId, requestData) {
+        print('request id is $requestId');
+        print('request data is $requestData');
+        if (requestData['user'] == userId) {
+          if (requestData['status'] == 'accepted' || requestData['status'] == 'awaiting') {
+            tripRequests.add(TripRequest.fromJson(requestData));
+          }
+        }
+      });
     });
 
     print('testingggggg $tripRequests');
@@ -202,10 +210,20 @@ class DatabaseHelper {
 
     List<TripRequest> tripRequests = [];
     values.forEach((key, value) {
-      if (value['status'] == 'completed' && value['user'] == userId) {
-        tripRequests.add(TripRequest.fromJson(value));
-      }
+      print('key is $key');
+      print('value is $value');
+      value.forEach((requestId, requestData) {
+        print('request id is $requestId');
+        print('request data is $requestData');
+        if (requestData['user'] == userId) {
+          if (requestData['status'] == 'completed') {
+            tripRequests.add(TripRequest.fromJson(requestData));
+          }
+        }
+      });
+     
     });
+    print('trip requests $tripRequests');
     return tripRequests;
   }
 }

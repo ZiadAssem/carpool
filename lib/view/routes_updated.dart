@@ -50,7 +50,7 @@ class _RoutesUpdatedState extends State<RoutesUpdated> {
       itemCount: databaseRoutes.length,
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          padding: const EdgeInsets.all(8),
           child: _buildRoute(databaseRoutes, index),
         );
       },
@@ -66,41 +66,44 @@ class _RoutesUpdatedState extends State<RoutesUpdated> {
       ),
       elevation: 8,
       color: Colors.white,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        title: Text(
-          route,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+      child: Container(
+        constraints: BoxConstraints(maxHeight: double.infinity),
+        child: ListTile(
+          // contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          title: Text(
+            route,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 142, 15, 6),
+            ),
+          ),
+          subtitle: Text(
+            'Tap to view details',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[600],
+            ),
+          ),
+          trailing: const Icon(
+            Icons.arrow_forward,
             color: Color.fromARGB(255, 142, 15, 6),
           ),
+          onTap: () async {
+            final trips =
+                await DatabaseHelper.instance.getTripsFromDb(route);
+      
+                print('Trips tessssssssssst $trips');
+            if (!context.mounted) return;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    TripPage(trips: trips, location: route),
+              ),
+            );
+          },
         ),
-        subtitle: Text(
-          'Tap to view details',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-          ),
-        ),
-        trailing: const Icon(
-          Icons.arrow_forward,
-          color: Color.fromARGB(255, 142, 15, 6),
-        ),
-        onTap: () async {
-          final trips =
-              await DatabaseHelper.instance.getTripsFromDb(route);
-
-              print('Trips tessssssssssst $trips');
-          if (!context.mounted) return;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  TripPage(trips: trips, location: route),
-            ),
-          );
-        },
       ),
     );
   }

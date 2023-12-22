@@ -78,31 +78,34 @@ class _TripPageState extends State<TripPage> with TickerProviderStateMixin {
   Widget _buildRide(rides, index, isHomeRide) {
     return Card(
       shape: RoundedRectangleBorder(
+
         borderRadius: BorderRadius.circular(16),
       ),
       elevation: 8,
+      
       color: const Color.fromARGB(
           255, 255, 255, 255), // Card background color (white)
       child: ListTile(
+        style: ListTileStyle.drawer,
         title: Text(
           widget.location,
-          style:  TextStyle(
+          style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: reusableColor()), // Adjust text color
         ),
         subtitle: Text(
           'Driver: ${rides[index].driverId}',
-          style:  TextStyle(
-              color: reusableColor()), // Adjust text color
+          style: TextStyle(color: reusableColor()), // Adjust text color
         ),
-        leading:  Icon(
+        leading: Icon(
           Icons.bus_alert_rounded,
           color: reusableColor(), // Adjust icon color
         ),
-        trailing: isHomeRide
+        trailing: Expanded(child: isHomeRide
             ? _buildHomeRide(rides, index)
             : _buildCampusRide(rides, index),
+        ),
         onTap: () {
           print(rides);
           print(rides[index]);
@@ -134,22 +137,15 @@ class _TripPageState extends State<TripPage> with TickerProviderStateMixin {
           style: TextStyle(color: Colors.black), // Adjust text color
         ),
         const SizedBox(height: 4),
-        isBefore10PM()
-            ? Text(
-                "${getTomorrowDate()}",
-                style:
-                    const TextStyle(color: Colors.black), // Adjust text color
-              )
-            : Text(
-                "${getAfterTomorrowDate()}",
-                style:
-                    const TextStyle(color: Colors.black), // Adjust text color
-              ),
+        Text(
+          rides[index].date.toString().substring(0, 10),
+          style: const TextStyle(color: Colors.black), // Adjust text color
+        )
       ],
     );
   }
 
-  Widget _buildHomeRide(rides, index) {
+  Widget _buildHomeRide(List<Trip> rides, index) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -163,17 +159,10 @@ class _TripPageState extends State<TripPage> with TickerProviderStateMixin {
           style: TextStyle(color: Colors.black), // Adjust text color
         ),
         const SizedBox(height: 4),
-        isBefore1PM()
-            ? Text(
-                "${getTodayDate()}",
-                style:
-                    const TextStyle(color: Colors.black), // Adjust text color
-              )
-            : Text(
-                "${getTomorrowDate()}",
-                style:
-                    const TextStyle(color: Colors.black), // Adjust text color
-              )
+        Text(
+          rides[index].date.toString().substring(0, 10),
+          style: const TextStyle(color: Colors.black), // Adjust text color
+        )
       ],
     );
   }
@@ -217,7 +206,7 @@ class _TripPageState extends State<TripPage> with TickerProviderStateMixin {
 
     return formattedDate;
   }
-  
+
   String _addLeadingZero(int number) {
     return number.toString().padLeft(2, '0');
   }

@@ -56,7 +56,8 @@ class _BottomNavPageState extends State<BottomNavPage> {
       },
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Routes'),
-        BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Cart'),
+        //status icon
+        BottomNavigationBarItem(icon: Icon(Icons.pending_actions), label: 'Status'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
       ],
     );

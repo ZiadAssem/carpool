@@ -8,11 +8,13 @@ environment:
 
 dependencies:
   carousel_slider: ^4.2.1
+  connectivity: ^3.0.6
   firebase_auth: ^4.12.1
   firebase_core: ^2.21.0
   firebase_database: ^10.3.5
   flutter:
     sdk: flutter
+  path: ^1.8.3
   sqflite: ^2.3.0
 
 dev_dependencies:

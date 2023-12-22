@@ -32,9 +32,10 @@ class _TripDetailsState extends State<TripDetails> {
         backgroundColor: const Color.fromARGB(255, 142, 15, 6),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16,50,16,120),
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _buildTripDetails(),
@@ -85,18 +86,36 @@ class _TripDetailsState extends State<TripDetails> {
   }
 
   Widget _buildRequestTripButton() {
-    return ElevatedButton(
-      onPressed: () {
-        _showConfirmationMenu(context);
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 142, 15, 6),
-        padding: const EdgeInsets.all(16),
-      ),
-      child: const Text(
-        'Request trip',
-        style: TextStyle(fontSize: 18),
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            _showConfirmationMenu(context);
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 142, 15, 6),
+            padding: const EdgeInsets.all(16),
+          ),
+          child: const Text(
+            'Pay Cash',
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+          ElevatedButton(
+          onPressed: () {
+            _showConfirmationMenu(context);
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 142, 15, 6),
+            padding: const EdgeInsets.all(16),
+          ),
+          child: const Text(
+            'Pay Visa',
+            style: TextStyle(fontSize: 18),
+          ),
+        )
+      ],
     );
   }
 

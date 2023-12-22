@@ -50,4 +50,4 @@ class TripRequest{
       isMorningTrip: value['isMorningTrip'],
     );
   }
-}
+} 

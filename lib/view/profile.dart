@@ -1,6 +1,8 @@
-import 'package:carpool/classes_updated/user_class.dart';
+import 'package:carpool/classes_updated/user_class.dart' as U;
+import 'package:carpool/controller/profile_controller.dart';
 import 'package:carpool/firebase/authentication.dart';
 import 'package:carpool/local_database/local_database.dart';
+import 'package:carpool/local_database/profile_model.dart';
 import 'package:carpool/reusable_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +17,42 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final _currentUser = DatabaseHelper.instance.currentUser;
+  // final _currentUser = DatabaseHelper.instance.currentUser;
+  bool _isLoading = true;
+  late ProfileController _controller;
+  late Map<String, dynamic> _currentUserData;
+  late Map<String, dynamic> userData;
+
+  @override
+  void initState() {
+
+    _controller = ProfileController(model: ProfileModel());
+
+    _loadUserData();
+        super.initState();
+
+
+  }
+
+  Future<void> _loadUserData() async {
+      Map<String, dynamic>? loadedData = await _controller.loadUserData(Authentication.instance.currentUserId);
+      print(loadedData?['name'] );
+    setState(() {
+      userData = loadedData!;
+      _isLoading = false;
+    });
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: reusableAppBar('Profile', null),
       backgroundColor: Colors.transparent,
-      body: Padding(
+      body: _isLoading? 
+      const CircularProgressIndicator()
+      : Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: Column(
@@ -68,10 +99,10 @@ class _ProfilePageState extends State<ProfilePage> {
             Text('User Details',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             SizedBox(height: 16),
-            ListTile(title: Text('Name: ${_currentUser.name}')),
-            ListTile(title: Text('Email: ${_currentUser.email}')),
+            ListTile(title: Text('Name: ${userData['name']}')),
+            ListTile(title: Text('Email: ${userData['email']}')),
             ListTile(
-              title: Text('Phone Number: ${_currentUser.phoneNumber}'),
+              title: Text('Phone Number: ${userData['phoneNumber']}'),
             )
             // Add more user details as needed
           ],
@@ -88,15 +119,4 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Text(text),
     );
   }
-
-  // _getCurrentUser() async {
-  //   if (widget.isOnline) {
-  //     final currentUser = await DatabaseHelper.instance.getCurrentUser();
-  //     return currentUser;
-  //   } else {
-  //     final db = LocalDatabaseHelper();
-  //     final currentUser = await db.getCurrentUser();
-  //     return currentUser;
-  //   }
-  // }
 }

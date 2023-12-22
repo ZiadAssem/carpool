@@ -13,7 +13,7 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: reusableAppBar('Cart', null),
+      appBar: reusableAppBar('Trips Status', null),
       backgroundColor: Colors.transparent,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -50,9 +50,19 @@ class CartPage extends StatelessWidget {
             List<TripRequest> tripRequests = snapshot.data as List<TripRequest>;
 
             if (tripRequests.isEmpty) {
-              return const Text(
-                "No trips in your cart",
-                style: TextStyle(fontSize: 40),
+              return  Card(
+                elevation: 4.0,
+                color: Colors.white.withOpacity(0.9),
+                child: SizedBox(
+                  height: 80,
+                  
+                  child: Center(
+                    child: Text(
+                      "No trips requested",
+                      style: TextStyle(fontSize: 40,color:reusableColor() ),
+                    ),
+                  ),
+                ),
               );
             }
             return _buildRequestList(tripRequests);
@@ -103,7 +113,7 @@ class CartPage extends StatelessWidget {
             _buildDetailRow('Time:', _toHome ? 'Evening' : 'Morning'),
             _buildDetailRow('Status', _tripRequests[index].status),
             const SizedBox(height: 16),
-            _buildButton('Proceed to Payment', () {}),
+            // _buildButton('Proceed to Payment', () {}),
           ],
         ),
       ),

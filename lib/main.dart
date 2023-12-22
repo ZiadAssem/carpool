@@ -15,6 +15,7 @@ import 'firebase/database.dart';
 import 'view/sign_in.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
@@ -27,6 +28,7 @@ void main() async {
       .signInWithEmailAndPassword('testuser@eng.asu.edu.eg', 'test1234');
   Authentication.instance.isOnline = true;
 
+Authentication.instance.currentUserId = 'testuser';
   await DatabaseHelper.instance.getCurrentUser();
 // END TESTING PURPOSES
 
